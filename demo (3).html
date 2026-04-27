@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zyra — Live Agent Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #080808;
+  --white: #F5F2EE;
+  --gold: #C9A96E;
+  --gold-light: #E8C98A;
+  --electric: #00E5C3;
+  --electric-dim: rgba(0,229,195,0.1);
+  --deep: #0D0D1A;
+  --muted: #6B6B7A;
+  --border: rgba(255,255,255,0.07);
+  --card: rgba(255,255,255,0.03);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Syne', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+nav {
+  padding: 20px 5vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  background: rgba(8,8,8,0.95);
+  backdrop-filter: blur(20px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 300;
+  color: var(--white);
+  text-decoration: none;
+}
+
+.nav-logo span { color: var(--gold); }
+
+.nav-back {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.nav-back:hover { color: var(--white); }
+
+.demo-hero {
+  text-align: center;
+  padding: 64px 5vw 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(201,169,110,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,169,110,0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+}
+
+.orb-1 { width:400px;height:400px;background:rgba(201,169,110,0.1);top:-150px;right:-100px; }
+.orb-2 { width:300px;height:300px;background:rgba(0,229,195,0.07);bottom:-100px;left:-80px; }
+
+.demo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border: 1px solid rgba(0,229,195,0.3);
+  border-radius: 100px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--electric);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  position: relative;
+  z-index: 2;
+}
+
+.live-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--electric);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(1.6);} }
+
+.demo-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 300;
+  line-height: 1.05;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+.demo-title em { font-style: italic; color: var(--gold); }
+
+.demo-sub {
+  font-size: 15px;
+  color: var(--muted);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.7;
+  position: relative;
+  z-index: 2;
+}
+
+.chat-layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 5vw 60px;
+  gap: 24px;
+  align-items: start;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 100px;
+}
+
+.agent-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.agent-avatar {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), #8B6914);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--black);
+  margin: 0 auto 16px;
+  position: relative;
+}
+
+.agent-online {
+  position: absolute;
+  bottom: 2px; right: 2px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--electric);
+  border: 2px solid var(--black);
+}
+
+.agent-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+
+.agent-role {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--electric);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.agent-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-label-s { font-size: 12px; color: var(--muted); }
+.stat-val { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--electric); }
+
+.suggestions-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 20px;
+}
+
+.suggestions-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.suggestion-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  color: var(--white);
+  padding: 10px 14px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-family: 'Syne', sans-serif;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: all 0.2s;
+  line-height: 1.4;
+}
+
+.suggestion-btn:last-child { margin-bottom: 0; }
+.suggestion-btn:hover { background: rgba(201,169,110,0.08); border-color: rgba(201,169,110,0.3); color: var(--gold); }
+
+.lang-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lang-label { font-size: 12px; color: var(--muted); }
+.lang-toggle { display: flex; gap: 6px; }
+
+.lang-btn {
+  padding: 4px 10px;
+  border-radius: 2px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  transition: all 0.2s;
+}
+
+.lang-btn.active { background: var(--electric-dim); border-color: var(--electric); color: var(--electric); }
+
+.chat-window {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  height: 620px;
+  overflow: hidden;
+}
+
+.chat-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.02);
+}
+
+.chat-header-left { display: flex; align-items: center; gap: 12px; }
+
+.chat-header-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), #8B6914);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  color: var(--black);
+}
+
+.chat-header-name { font-size: 14px; font-weight: 700; }
+
+.chat-header-status {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--electric);
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.status-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--electric);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.chat-reset {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  padding: 6px 12px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chat-reset:hover { border-color: rgba(255,255,255,0.2); color: var(--white); }
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  scroll-behavior: smooth;
+}
+
+.messages::-webkit-scrollbar { width: 4px; }
+.messages::-webkit-scrollbar-track { background: transparent; }
+.messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.msg-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  animation: msgFade 0.3s ease forwards;
+}
+
+@keyframes msgFade { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+
+.msg-row.user { flex-direction: row-reverse; }
+
+.msg-av {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.msg-row.agent .msg-av {
+  background: linear-gradient(135deg, var(--gold), #8B6914);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  color: var(--black);
+}
+
+.msg-row.user .msg-av { background: rgba(255,255,255,0.08); color: var(--white); }
+
+.msg-bubble {
+  max-width: 75%;
+  padding: 12px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.msg-row.agent .msg-bubble {
+  background: rgba(201,169,110,0.08);
+  border: 1px solid rgba(201,169,110,0.15);
+  color: var(--white);
+  border-radius: 2px 12px 12px 12px;
+}
+
+.msg-row.user .msg-bubble {
+  background: rgba(0,229,195,0.08);
+  border: 1px solid rgba(0,229,195,0.15);
+  color: var(--white);
+  border-radius: 12px 2px 12px 12px;
+}
+
+.msg-time {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  margin-top: 4px;
+  padding: 0 4px;
+}
+
+.msg-row.user .msg-time { text-align: right; }
+
+.typing-row { display: flex; gap: 10px; align-items: flex-end; }
+
+.typing-bubble {
+  background: rgba(201,169,110,0.08);
+  border: 1px solid rgba(201,169,110,0.15);
+  padding: 14px 18px;
+  border-radius: 2px 12px 12px 12px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.typing-bubble span {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: bounce 1.2s ease-in-out infinite;
+}
+
+.typing-bubble span:nth-child(2) { animation-delay: 0.2s; }
+.typing-bubble span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4;} 50%{transform:translateY(-4px);opacity:1;} }
+
+.chat-input-area {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  background: rgba(255,255,255,0.01);
+}
+
+.input-row { display: flex; gap: 10px; align-items: flex-end; }
+
+.chat-input {
+  flex: 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 12px 16px;
+  color: var(--white);
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+  max-height: 120px;
+  line-height: 1.5;
+}
+
+.chat-input::placeholder { color: var(--muted); }
+.chat-input:focus { border-color: rgba(201,169,110,0.4); }
+
+.send-btn {
+  width: 44px; height: 44px;
+  background: var(--gold);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.send-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+.send-btn:disabled { background: rgba(201,169,110,0.3); cursor: not-allowed; transform: none; }
+.send-btn svg { width: 18px; height: 18px; fill: var(--black); }
+
+.input-hint {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 8px;
+  letter-spacing: 0.05em;
+}
+
+.demo-cta {
+  background: var(--deep);
+  border-top: 1px solid var(--border);
+  padding: 40px 5vw;
+  text-align: center;
+}
+
+.demo-cta-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(24px, 4vw, 40px);
+  font-weight: 300;
+  margin-bottom: 12px;
+}
+
+.demo-cta-title em { font-style: italic; color: var(--gold); }
+.demo-cta-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+
+.btn-primary {
+  background: var(--gold);
+  color: var(--black);
+  padding: 14px 32px;
+  border-radius: 2px;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: inline-block;
+}
+
+.btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+@media (max-width: 768px) {
+  .chat-layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; }
+  .chat-window { height: 500px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Zyra<span>.</span></a>
+  <a href="/" class="nav-back">← Back to site</a>
+</nav>
+
+<div class="demo-hero">
+  <div class="grid-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="demo-badge">
+    <div class="live-dot"></div>
+    Live Demo · Powered by Zyra AI
+  </div>
+  <h1 class="demo-title">Talk to <em>Zyra.</em><br>Your AI real estate agent.</h1>
+  <p class="demo-sub">This is a live AI agent — not a script, not a chatbot. Ask it anything a real estate client would ask. In Arabic or English.</p>
+</div>
+
+<div class="chat-layout">
+  <div class="sidebar">
+    <div class="agent-card">
+      <div class="agent-avatar">Z<div class="agent-online"></div></div>
+      <div class="agent-name">Zyra Agent</div>
+      <div class="agent-role">Real Estate AI · Demo</div>
+      <div class="agent-stats">
+        <div class="stat-row"><span class="stat-label-s">Response time</span><span class="stat-val">&lt; 3s</span></div>
+        <div class="stat-row"><span class="stat-label-s">Languages</span><span class="stat-val">AR + EN</span></div>
+        <div class="stat-row"><span class="stat-label-s">Status</span><span class="stat-val">● ACTIVE</span></div>
+      </div>
+    </div>
+
+    <div class="suggestions-card">
+      <div class="suggestions-title">Try asking</div>
+      <button class="suggestion-btn" onclick="sendSuggestion(this.innerText)">I'm looking for a 2BR in Dubai Marina</button>
+      <button class="suggestion-btn" onclick="sendSuggestion(this.innerText)">What's the average rent in Downtown Dubai?</button>
+      <button class="suggestion-btn" onclick="sendSuggestion(this.innerText)">Can you book me a viewing this week?</button>
+      <button class="suggestion-btn" onclick="sendSuggestion('أبحث عن شقة للإيجار في دبي')">أبحث عن شقة للإيجار في دبي 🇦🇪</button>
+    </div>
+
+    <div class="lang-card">
+      <span class="lang-label">Language hint</span>
+      <div class="lang-toggle">
+        <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" id="btnAR" onclick="setLang('ar')">AR</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-window">
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <div class="chat-header-avatar">Z</div>
+        <div>
+          <div class="chat-header-name">Zyra · Real Estate Agent</div>
+          <div class="chat-header-status"><div class="status-dot"></div>ONLINE · READY TO ASSIST</div>
+        </div>
+      </div>
+      <button class="chat-reset" onclick="resetChat()">↺ Reset</button>
+    </div>
+
+    <div class="messages" id="messages"></div>
+
+    <div class="chat-input-area">
+      <div class="input-row">
+        <textarea class="chat-input" id="chatInput" placeholder="Ask Zyra anything — in English or Arabic..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+      <div class="input-hint">Press Enter to send · Shift+Enter for new line</div>
+    </div>
+  </div>
+</div>
+
+<div class="demo-cta">
+  <div class="demo-cta-title">Ready to deploy <em>Zyra</em> for your agency?</div>
+  <div class="demo-cta-sub">Get your own AI agent live in 48 hours. No technical knowledge required.</div>
+  <a href="/#contact" class="btn-primary">Book a Free Demo</a>
+</div>
+
+<script>
+// ── CONFIG ──
+// This points to your Vercel backend — replace with your actual Vercel URL after deploying
+const API_URL = 'https://zyra-agent-xi.vercel.app/api/chat';
+
+let conversationHistory = [];
+let currentLang = 'en';
+let isLoading = false;
+
+window.onload = () => {
+  addMessage('agent', "Hello! I'm Zyra, your AI real estate assistant. Whether you're looking to buy, rent, or invest in the Middle East — I'm here to help. What are you looking for today?");
+};
+
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('btnEN').classList.toggle('active', lang === 'en');
+  document.getElementById('btnAR').classList.toggle('active', lang === 'ar');
+  document.getElementById('chatInput').placeholder = lang === 'ar' ? 'اسأل زيرا أي شيء...' : 'Ask Zyra anything — in English or Arabic...';
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text || isLoading) return;
+
+  input.value = '';
+  autoResize(input);
+  addMessage('user', text);
+  conversationHistory.push({ role: 'user', content: text });
+  setLoading(true);
+  showTyping();
+
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: conversationHistory })
+    });
+
+    const data = await response.json();
+    hideTyping();
+
+    if (data.content && data.content[0]) {
+      const reply = data.content[0].text;
+      conversationHistory.push({ role: 'assistant', content: reply });
+      addMessage('agent', reply);
+    } else {
+      addMessage('agent', 'I apologize, I encountered an issue. Please try again.');
+    }
+  } catch (err) {
+    hideTyping();
+    addMessage('agent', 'Connection issue. Please check your internet and try again.');
+  }
+
+  setLoading(false);
+}
+
+function sendSuggestion(text) {
+  document.getElementById('chatInput').value = text;
+  sendMessage();
+}
+
+function addMessage(role, text) {
+  const messages = document.getElementById('messages');
+  const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const isRTL = /[\u0600-\u06FF]/.test(text);
+  const row = document.createElement('div');
+  row.className = `msg-row ${role}`;
+  row.innerHTML = `
+    <div class="msg-av">${role === 'agent' ? 'Z' : '👤'}</div>
+    <div>
+      <div class="msg-bubble" dir="${isRTL ? 'rtl' : 'ltr'}">${text.replace(/\n/g, '<br>')}</div>
+      <div class="msg-time">${now}</div>
+    </div>
+  `;
+  messages.appendChild(row);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function showTyping() {
+  const messages = document.getElementById('messages');
+  const t = document.createElement('div');
+  t.className = 'typing-row';
+  t.id = 'typingIndicator';
+  t.innerHTML = `
+    <div class="msg-av" style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#C9A96E,#8B6914);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:16px;color:#080808;">Z</div>
+    <div class="typing-bubble"><span></span><span></span><span></span></div>
+  `;
+  messages.appendChild(t);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function hideTyping() {
+  const t = document.getElementById('typingIndicator');
+  if (t) t.remove();
+}
+
+function setLoading(val) {
+  isLoading = val;
+  document.getElementById('sendBtn').disabled = val;
+}
+
+function resetChat() {
+  conversationHistory = [];
+  document.getElementById('messages').innerHTML = '';
+  window.onload();
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+</script>
+</body>
+</html>
