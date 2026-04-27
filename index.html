@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zyra — AI Agents for Real Estate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #080808;
+  --white: #F5F2EE;
+  --gold: #C9A96E;
+  --gold-light: #E8C98A;
+  --electric: #00E5C3;
+  --electric-dim: rgba(0,229,195,0.12);
+  --deep: #0D0D1A;
+  --muted: #6B6B7A;
+  --card: rgba(255,255,255,0.03);
+  --border: rgba(255,255,255,0.07);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Syne', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 20px 5vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(20px);
+  background: rgba(8,8,8,0.7);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--white);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.nav-logo span { color: var(--gold); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--white); }
+
+.nav-cta {
+  background: var(--gold) !important;
+  color: var(--black) !important;
+  padding: 10px 22px;
+  border-radius: 2px;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase;
+  transition: background 0.2s !important;
+}
+
+.nav-cta:hover { background: var(--gold-light) !important; }
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--white);
+  transition: all 0.3s;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 140px 5vw 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(201,169,110,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,169,110,0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+}
+
+.orb-1 { width:600px;height:600px;background:rgba(201,169,110,0.12);top:-200px;right:-150px; animation: drift 12s ease-in-out infinite; }
+.orb-2 { width:400px;height:400px;background:rgba(0,229,195,0.08);bottom:-100px;left:-100px; animation: drift 14s ease-in-out infinite reverse; }
+.orb-3 { width:300px;height:300px;background:rgba(201,169,110,0.08);top:50%;left:50%;transform:translate(-50%,-50%); animation: drift 10s ease-in-out infinite 2s; }
+
+@keyframes drift {
+  0%,100%{transform:translate(0,0);}
+  33%{transform:translate(20px,-30px);}
+  66%{transform:translate(-15px,20px);}
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border: 1px solid rgba(0,229,195,0.3);
+  border-radius: 100px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--electric);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.2s;
+}
+
+.badge-dot {
+  width: 6px;height: 6px;
+  border-radius: 50%;
+  background: var(--electric);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.5;transform:scale(1.5);} }
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(52px, 9vw, 130px);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.4s;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-title .line-2 {
+  display: block;
+  color: rgba(245,242,238,0.35);
+}
+
+.hero-sub {
+  max-width: 540px;
+  font-size: clamp(15px, 2vw, 18px);
+  line-height: 1.7;
+  color: rgba(245,242,238,0.6);
+  margin: 0 auto 48px;
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.6s;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.8s;
+}
+
+.btn-primary {
+  background: var(--gold);
+  color: var(--black);
+  padding: 16px 36px;
+  border-radius: 2px;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 60px rgba(201,169,110,0.3);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--white);
+  padding: 16px 36px;
+  border-radius: 2px;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.btn-ghost:hover {
+  border-color: rgba(255,255,255,0.3);
+  transform: translateY(-2px);
+}
+
+/* ── STATS BAR ── */
+.stats-bar {
+  background: var(--deep);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 40px 5vw;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 20px;
+  position: relative;
+}
+
+.stat-item::after {
+  content:'';
+  position:absolute;
+  right:0;top:20%;bottom:20%;
+  width:1px;
+  background:var(--border);
+}
+
+.stat-item:last-child::after { display:none; }
+
+.stat-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── SECTION COMMONS ── */
+.section {
+  padding: 120px 5vw;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--electric);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.section-label::after {
+  content:'';
+  width:40px;
+  height:1px;
+  background:var(--electric);
+  opacity:0.4;
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 300;
+  line-height: 1.05;
+  margin-bottom: 20px;
+}
+
+.section-sub {
+  font-size: 16px;
+  color: rgba(245,242,238,0.55);
+  max-width: 520px;
+  line-height: 1.7;
+}
+
+/* ── HOW IT WORKS ── */
+.how-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  margin-top: 72px;
+}
+
+.how-left {
+  padding-right: 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.step {
+  padding: 32px 0;
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 24px;
+  align-items: start;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.step:hover .step-title { color: var(--gold); }
+
+.step-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--electric);
+  letter-spacing: 0.1em;
+  padding-top: 4px;
+}
+
+.step-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  transition: color 0.2s;
+}
+
+.step-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.how-right {
+  background: var(--deep);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Agent Demo Window */
+.agent-window {
+  background: rgba(0,0,0,0.5);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  height: 100%;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+}
+
+.agent-titlebar {
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot-r{width:10px;height:10px;border-radius:50%;background:#FF5F57;}
+.dot-y{width:10px;height:10px;border-radius:50%;background:#FFBD2E;}
+.dot-g{width:10px;height:10px;border-radius:50%;background:#28CA41;}
+
+.agent-title-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin-left: 8px;
+}
+
+.chat-body {
+  flex: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
+}
+
+.msg {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.msg.visible {
+  animation: msgIn 0.4s ease forwards;
+}
+
+@keyframes msgIn {
+  to { opacity:1; transform:translateY(0); }
+}
+
+.msg-avatar {
+  width: 32px;height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.msg-agent .msg-avatar { background: var(--gold); color: var(--black); font-family:'Cormorant Garamond',serif; font-size:16px; }
+.msg-user .msg-avatar { background: rgba(255,255,255,0.1); color:var(--white); font-size:12px; }
+
+.msg-bubble {
+  padding: 12px 16px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 300px;
+}
+
+.msg-agent .msg-bubble {
+  background: rgba(201,169,110,0.1);
+  border: 1px solid rgba(201,169,110,0.2);
+  color: var(--white);
+}
+
+.msg-user .msg-bubble {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: rgba(245,242,238,0.8);
+  margin-left: auto;
+}
+
+.msg-user { flex-direction: row-reverse; }
+
+.typing {
+  display:flex;gap:4px;align-items:center;padding:4px 0;
+}
+
+.typing span {
+  width:6px;height:6px;border-radius:50%;background:var(--gold);
+  animation: blink 1.2s ease-in-out infinite;
+}
+
+.typing span:nth-child(2){animation-delay:0.2s;}
+.typing span:nth-child(3){animation-delay:0.4s;}
+
+@keyframes blink{0%,100%{opacity:0.3;}50%{opacity:1;}}
+
+.agent-status {
+  padding: 12px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--electric);
+}
+
+/* ── FEATURES ── */
+.features-section {
+  background: var(--deep);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.features-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 120px 5vw;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 72px;
+}
+
+.feature-card {
+  padding: 48px 36px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.01);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--electric));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.feature-card:hover {
+  background: rgba(201,169,110,0.04);
+  transform: translateY(-4px);
+}
+
+.feature-card:hover::before { transform: scaleX(1); }
+
+.feature-icon {
+  width: 48px;height: 48px;
+  border-radius: 4px;
+  background: rgba(201,169,110,0.1);
+  border: 1px solid rgba(201,169,110,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 28px;
+}
+
+.feature-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+.feature-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.feature-tag {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 4px 10px;
+  background: var(--electric-dim);
+  border-radius: 100px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--electric);
+  letter-spacing: 0.1em;
+}
+
+/* ── PRICING ── */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 72px;
+}
+
+.pricing-card {
+  padding: 48px 36px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  position: relative;
+  transition: all 0.3s;
+}
+
+.pricing-card:hover { transform: translateY(-4px); }
+
+.pricing-card.featured {
+  background: rgba(201,169,110,0.06);
+  border-color: rgba(201,169,110,0.4);
+}
+
+.pricing-badge {
+  position: absolute;
+  top: -1px; left: 50%; transform: translateX(-50%);
+  background: var(--gold);
+  color: var(--black);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  padding: 5px 16px;
+  text-transform: uppercase;
+}
+
+.pricing-tier {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--electric);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.pricing-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(48px, 6vw, 72px);
+  font-weight: 300;
+  line-height: 1;
+  margin-bottom: 4px;
+  color: var(--white);
+}
+
+.pricing-price sup {
+  font-size: 28px;
+  vertical-align: super;
+  color: var(--gold);
+}
+
+.pricing-period {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 36px;
+}
+
+.pricing-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.pricing-features li {
+  font-size: 14px;
+  color: rgba(245,242,238,0.75);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  line-height: 1.5;
+}
+
+.pricing-features li::before {
+  content: '✓';
+  color: var(--electric);
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.pricing-note {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 16px;
+  font-style: italic;
+}
+
+/* ── WHATSAPP SECTION ── */
+.whatsapp-section {
+  padding: 120px 5vw;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.wa-phone {
+  background: #1A1A1A;
+  border-radius: 40px;
+  padding: 20px 16px;
+  border: 8px solid #2A2A2A;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.wa-screen {
+  background: #0B1014;
+  border-radius: 28px;
+  overflow: hidden;
+}
+
+.wa-header {
+  background: #1F2C34;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wa-avatar {
+  width: 38px;height:38px;
+  border-radius:50%;
+  background: var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;color:var(--black);font-weight:300;
+}
+
+.wa-name { font-size:14px;font-weight:600;color:#E9EDEF; }
+.wa-status { font-size:11px;color:#8696A0; }
+
+.wa-body {
+  padding: 16px;
+  display:flex;flex-direction:column;gap:10px;
+  background: #0B1014;
+  min-height: 340px;
+}
+
+.wa-msg {
+  max-width:80%;
+  padding:8px 12px;
+  border-radius:8px;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.wa-msg.zyra {
+  background:#1F2C34;
+  color:#E9EDEF;
+  border-radius:0 8px 8px 8px;
+}
+
+.wa-msg.user {
+  background:#005C4B;
+  color:#E9EDEF;
+  border-radius:8px 0 8px 8px;
+  align-self:flex-end;
+}
+
+.wa-time { font-size:10px;color:#8696A0;margin-top:4px;text-align:right; }
+
+.wa-input {
+  background:#1F2C34;
+  padding:10px 14px;
+  display:flex;align-items:center;gap:8px;
+  border-radius:0 0 28px 28px;
+}
+
+.wa-input-text {
+  flex:1;
+  font-size:13px;color:#8696A0;
+}
+
+/* ── TESTIMONIALS ── */
+.testimonials {
+  background: var(--deep);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 120px 5vw;
+}
+
+.test-inner { max-width: 1400px; margin: 0 auto; }
+
+.test-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 64px;
+}
+
+.test-card {
+  padding: 40px 32px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.02);
+  transition: all 0.3s;
+}
+
+.test-card:hover {
+  background: rgba(201,169,110,0.04);
+  transform: translateY(-3px);
+}
+
+.test-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.5;
+  margin-bottom: 28px;
+  color: rgba(245,242,238,0.85);
+}
+
+.test-quote::before { content:'"'; color:var(--gold); font-size:48px; line-height:0; vertical-align:-18px; margin-right:4px; }
+
+.test-author {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.test-avatar {
+  width: 42px;height:42px;
+  border-radius:50%;
+  background: linear-gradient(135deg, var(--gold), var(--electric));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:15px;color:var(--black);
+}
+
+.test-name { font-size:14px;font-weight:700; }
+.test-role { font-size:12px;color:var(--muted); }
+
+/* ── CTA ── */
+.cta-section {
+  padding: 140px 5vw;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section .orb-1 { opacity: 0.1; }
+
+.cta-section .section-title {
+  font-size: clamp(40px, 7vw, 96px);
+  max-width: 900px;
+  margin: 0 auto 24px;
+}
+
+.cta-section .section-sub {
+  margin: 0 auto 48px;
+  max-width: 480px;
+}
+
+.cta-note {
+  margin-top: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 64px 5vw;
+}
+
+.footer-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+}
+
+.footer-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-weight: 300;
+  margin-bottom: 16px;
+}
+
+.footer-logo span { color: var(--gold); }
+
+.footer-tagline {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 260px;
+  margin-bottom: 24px;
+}
+
+.footer-col-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--electric);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-links a {
+  font-size: 14px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover { color: var(--white); }
+
+.footer-bottom {
+  max-width: 1400px;
+  margin: 40px auto 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer-copy {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+@keyframes fadeUp {
+  from{opacity:0;transform:translateY(24px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,169,110,0.15), transparent);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .stats-bar { grid-template-columns: repeat(2,1fr); }
+  .stat-item:nth-child(2)::after { display:none; }
+  .how-grid { grid-template-columns:1fr; }
+  .how-left { padding-right:0; }
+  .features-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .whatsapp-section { grid-template-columns:1fr; }
+  .test-grid { grid-template-columns:1fr; }
+  .footer-inner { grid-template-columns:1fr 1fr; }
+}
+
+@media (max-width: 540px) {
+  .stats-bar { grid-template-columns: 1fr 1fr; }
+  .footer-inner { grid-template-columns:1fr; }
+}
+
+/* Mobile nav open state */
+.nav-open .nav-links {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 70px; left:0; right:0;
+  background: rgba(8,8,8,0.97);
+  backdrop-filter: blur(20px);
+  padding: 32px 5vw;
+  border-bottom: 1px solid var(--border);
+  gap: 24px;
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Zyra<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact" class="nav-cta">Book a Demo</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="grid-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="hero-badge">
+    <div class="badge-dot"></div>
+    Now live in UAE · KSA · Lebanon
+  </div>
+
+  <h1 class="hero-title">
+    Your Business<br>
+    <em>Never Sleeps.</em>
+    <span class="line-2">Neither Does Zyra.</span>
+  </h1>
+
+  <p class="hero-sub">
+    AI agents that qualify leads, book viewings, and respond to clients in Arabic and English — 24 hours a day, 7 days a week, at a fraction of the cost of a single employee.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#contact" class="btn-primary">Book a Free Demo</a>
+    <a href="#how" class="btn-ghost">See How It Works</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-number">24/7</div>
+    <div class="stat-label">Always On</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">3s</div>
+    <div class="stat-label">Avg Response Time</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">80%</div>
+    <div class="stat-label">Cost Reduction</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">2</div>
+    <div class="stat-label">Languages: AR + EN</div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="section-label">How It Works</div>
+  <h2 class="section-title">Simple to deploy.<br>Powerful by design.</h2>
+  <p class="section-sub">Zyra connects to your existing channels in under 48 hours. No technical knowledge required.</p>
+
+  <div class="how-grid">
+    <div class="how-left">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div>
+          <div class="step-title">We set up your agent</div>
+          <div class="step-desc">We train Zyra on your listings, pricing, FAQs, and brand voice. Your agent is live within 48 hours — no code required from your side.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div>
+          <div class="step-title">Leads arrive. Zyra responds instantly</div>
+          <div class="step-desc">Whether through WhatsApp, your website, or Instagram DMs — Zyra picks up every inquiry within 3 seconds, in Arabic or English.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div>
+          <div class="step-title">Zyra qualifies and books</div>
+          <div class="step-desc">Zyra asks the right questions, scores lead quality, and books viewings directly into your calendar. Only hot leads reach your team.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div>
+          <div class="step-title">You close. Zyra handles the rest</div>
+          <div class="step-desc">Follow-ups, reminders, FAQs, post-visit messages — Zyra keeps every lead warm while you focus on deals that matter.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="how-right">
+      <div class="agent-window">
+        <div class="agent-titlebar">
+          <div class="dot-r"></div>
+          <div class="dot-y"></div>
+          <div class="dot-g"></div>
+          <span class="agent-title-text">zyra-agent · real-estate-dubai</span>
+        </div>
+        <div class="chat-body" id="chatBody">
+          <!-- Messages injected by JS -->
+        </div>
+        <div class="agent-status">
+          <div class="badge-dot"></div>
+          ZYRA AGENT ACTIVE · RESPONSE TIME &lt; 3s
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FEATURES -->
+<div class="features-section">
+  <div class="features-inner" id="features">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Everything your team<br>wishes it could do.</h2>
+    <p class="section-sub">Zyra doesn't just chat. It works — executing real tasks, qualifying real leads, booking real appointments.</p>
+
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <div class="feature-title">Arabic + English</div>
+        <div class="feature-desc">Zyra switches languages mid-conversation automatically. No awkward translations. Natural, fluent responses in both languages from the same agent.</div>
+        <span class="feature-tag">BILINGUAL NATIVE</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">💬</div>
+        <div class="feature-title">WhatsApp Integration</div>
+        <div class="feature-desc">Deploy directly on WhatsApp Business — the dominant channel in the GCC. Clients reach you where they already are, and Zyra is ready.</div>
+        <span class="feature-tag">GCC-FIRST</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <div class="feature-title">Lead Qualification</div>
+        <div class="feature-desc">Zyra scores every lead by budget, timeline, and intent. Your team only spends time on prospects who are ready to move.</div>
+        <span class="feature-tag">AI-POWERED</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <div class="feature-title">Automatic Booking</div>
+        <div class="feature-desc">Integrated with Google Calendar and Calendly. Zyra books viewings, sends confirmations, and follows up with reminders automatically.</div>
+        <span class="feature-tag">CALENDAR SYNC</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Live Dashboard</div>
+        <div class="feature-desc">Track every conversation, lead score, and booking in real time. Know exactly how your agent is performing, down to the message.</div>
+        <span class="feature-tag">REAL-TIME</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⚙️</div>
+        <div class="feature-title">Custom Training</div>
+        <div class="feature-desc">Zyra learns your listings, your tone, your business rules. It sounds exactly like your best agent — not a generic bot.</div>
+        <span class="feature-tag">TAILORED TO YOU</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- WHATSAPP SECTION -->
+<section style="padding:120px 0; background:var(--black);">
+  <div class="whatsapp-section">
+    <div>
+      <div class="section-label">WhatsApp Agent</div>
+      <h2 class="section-title">Where your clients already are.</h2>
+      <p class="section-sub" style="margin-bottom:32px;">In the GCC, business happens on WhatsApp. Zyra lives there too — responding instantly, qualifying leads, and booking viewings without a human ever touching the keyboard.</p>
+      <a href="#contact" class="btn-primary">Deploy on WhatsApp</a>
+    </div>
+
+    <div class="wa-phone">
+      <div class="wa-screen">
+        <div class="wa-header">
+          <div class="wa-avatar">Z</div>
+          <div>
+            <div class="wa-name">Zyra · Al Faris Properties</div>
+            <div class="wa-status">● Online</div>
+          </div>
+        </div>
+        <div class="wa-body">
+          <div class="wa-msg zyra">
+            مرحباً! أنا زيرا، المساعد الذكي لعقارات الفارس. كيف يمكنني مساعدتك اليوم؟
+            <div class="wa-time">09:14 ✓✓</div>
+          </div>
+          <div class="wa-msg user">
+            Hi, I'm looking for a 2BR apartment in Dubai Marina, budget around 120k AED
+            <div class="wa-time">09:15 ✓✓</div>
+          </div>
+          <div class="wa-msg zyra">
+            Great! We have 4 units available in Dubai Marina within your budget. Are you looking to rent or buy? And when would you like to move in?
+            <div class="wa-time">09:15 ✓✓</div>
+          </div>
+          <div class="wa-msg user">
+            Rent, ideally by end of May
+            <div class="wa-time">09:16 ✓✓</div>
+          </div>
+          <div class="wa-msg zyra">
+            Perfect timing! I can schedule a viewing for you this week. Are you available Thursday at 4pm or Saturday at 11am?
+            <div class="wa-time">09:16 ✓✓</div>
+          </div>
+        </div>
+        <div class="wa-input">
+          <span class="wa-input-text">Type a message...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="section-label">Pricing</div>
+  <h2 class="section-title">Transparent pricing.<br>No surprises.</h2>
+  <p class="section-sub">Every plan includes setup, training, and support. Cancel anytime. No long-term contracts.</p>
+
+  <div class="pricing-grid">
+
+    <div class="pricing-card">
+      <div class="pricing-tier">Starter</div>
+      <div class="pricing-price"><sup>$</sup>199</div>
+      <div class="pricing-period">per month · billed monthly</div>
+      <ul class="pricing-features">
+        <li>1 AI Agent (Web + WhatsApp)</li>
+        <li>Arabic + English responses</li>
+        <li>Up to 500 conversations/month</li>
+        <li>Lead qualification</li>
+        <li>Calendar booking integration</li>
+        <li>Email support</li>
+      </ul>
+      <a href="#contact" class="btn-ghost" style="width:100%;text-align:center;">Get Started</a>
+      <p class="pricing-note">Perfect for independent agents and small brokerages.</p>
+    </div>
+
+    <div class="pricing-card featured">
+      <div class="pricing-badge">Most Popular</div>
+      <div class="pricing-tier">Growth</div>
+      <div class="pricing-price"><sup>$</sup>399</div>
+      <div class="pricing-period">per month · billed monthly</div>
+      <ul class="pricing-features">
+        <li>3 AI Agents (Web + WhatsApp + Instagram)</li>
+        <li>Arabic + English + custom tone</li>
+        <li>Unlimited conversations</li>
+        <li>Advanced lead scoring</li>
+        <li>Live dashboard + analytics</li>
+        <li>CRM integration (HubSpot, Zoho)</li>
+        <li>Priority support + monthly review call</li>
+      </ul>
+      <a href="#contact" class="btn-primary" style="width:100%;text-align:center;">Get Started</a>
+      <p class="pricing-note">Best value for growing real estate agencies.</p>
+    </div>
+
+    <div class="pricing-card">
+      <div class="pricing-tier">Enterprise</div>
+      <div class="pricing-price" style="font-size:clamp(36px,4vw,52px);">Custom</div>
+      <div class="pricing-period">tailored to your operation</div>
+      <ul class="pricing-features">
+        <li>Unlimited agents across all channels</li>
+        <li>Custom AI model training</li>
+        <li>White-label option available</li>
+        <li>API access for your own systems</li>
+        <li>Dedicated account manager</li>
+        <li>SLA + 99.9% uptime guarantee</li>
+        <li>On-site onboarding available</li>
+      </ul>
+      <a href="#contact" class="btn-ghost" style="width:100%;text-align:center;">Contact Us</a>
+      <p class="pricing-note">For large brokerages and property developers.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="orb orb-1" style="left:50%;transform:translateX(-50%);top:-100px;"></div>
+  <div class="section-label" style="justify-content:center;margin-bottom:24px;">
+    Get Started
+  </div>
+  <h2 class="section-title">
+    Your first AI agent<br>
+    <em>live in 48 hours.</em>
+  </h2>
+  <p class="section-sub">
+    Book a free 30-minute demo. We'll show you exactly how Zyra works for your business — no commitment required.
+  </p>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:48px;">
+    <a href="mailto:hello@zyra.ai" class="btn-primary">Book Your Free Demo</a>
+    <a href="https://wa.me/9611234567" class="btn-ghost">Chat on WhatsApp</a>
+  </div>
+  <p class="cta-note">No credit card · No contracts · Live in 48 hours</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">Zyra<span>.</span></div>
+      <p class="footer-tagline">AI agents built for the Middle East. From Beirut, for the world.</p>
+      <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--electric);letter-spacing:0.1em;">hello@zyra.ai</div>
+    </div>
+    <div>
+      <div class="footer-col-title">Product</div>
+      <ul class="footer-links">
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#contact">Book Demo</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Markets</div>
+      <ul class="footer-links">
+        <li><a href="#">Dubai, UAE</a></li>
+        <li><a href="#">Riyadh, KSA</a></li>
+        <li><a href="#">Beirut, Lebanon</a></li>
+        <li><a href="#">Doha, Qatar</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <ul class="footer-links">
+        <li><a href="#">About Zyra</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 ZYRA AI · ALL RIGHTS RESERVED</div>
+    <div class="footer-copy">BUILT IN BEIRUT · SERVING THE MIDDLE EAST</div>
+  </div>
+</footer>
+
+<script>
+// Nav toggle
+function toggleNav() {
+  document.getElementById('navbar').classList.toggle('nav-open');
+}
+
+// Animated chat demo
+const messages = [
+  { type: 'agent', text: 'Hi! I\'m Zyra, your AI real estate assistant. Are you looking to buy, rent, or sell a property?' },
+  { type: 'user',  text: 'Looking to rent a 2BR in Dubai Marina' },
+  { type: 'agent', text: 'Great choice! We have 4 available units there. What\'s your monthly budget?' },
+  { type: 'user',  text: 'Around 10,000 AED per month' },
+  { type: 'agent', text: 'Perfect — I have 2 units that match exactly. Can I book you a viewing this week? Thursday at 5pm works great.' },
+  { type: 'user',  text: 'Thursday works for me!' },
+  { type: 'agent', text: '✅ Viewing confirmed for Thursday at 5pm. You\'ll receive a WhatsApp confirmation shortly. Anything else I can help with?' },
+];
+
+let msgIndex = 0;
+const chatBody = document.getElementById('chatBody');
+
+function addMessage() {
+  if (msgIndex >= messages.length) {
+    setTimeout(() => {
+      chatBody.innerHTML = '';
+      msgIndex = 0;
+      setTimeout(addMessage, 1000);
+    }, 4000);
+    return;
+  }
+  const m = messages[msgIndex];
+  const div = document.createElement('div');
+  div.className = `msg msg-${m.type}`;
+  div.innerHTML = `
+    <div class="msg-avatar">${m.type === 'agent' ? 'Z' : '👤'}</div>
+    <div class="msg-bubble">${m.text}</div>
+  `;
+  chatBody.appendChild(div);
+  setTimeout(() => div.classList.add('visible'), 50);
+  chatBody.scrollTop = chatBody.scrollHeight;
+  msgIndex++;
+  setTimeout(addMessage, msgIndex % 2 === 0 ? 1800 : 2400);
+}
+
+setTimeout(addMessage, 800);
+
+// Scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.feature-card, .pricing-card, .step').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
