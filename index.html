@@ -1032,7 +1032,7 @@ footer {
     <li><a href="#how">How It Works</a></li>
     <li><a href="#features">Features</a></li>
     <li><a href="#pricing">Pricing</a></li>
-    <li><a href="#contact" class="nav-cta" onclick="openDemoModal();return false;">Book a Demo</a></li>
+    <li><a href="javascript:void(0)" class="nav-cta" onclick="openDemoModal()">Book a Demo</a></li>
   </ul>
   <div class="hamburger" id="hamburger" onclick="toggleNav()">
     <span></span><span></span><span></span>
@@ -1672,6 +1672,26 @@ async function submitDemoForm(e) {
   }
 }
 
+// ── SCROLL TO TOP ──
+const scrollTopBtn = document.getElementById('scrollTop');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 400) {
+    scrollTopBtn.style.display = 'flex';
+  } else {
+    scrollTopBtn.style.display = 'none';
+  }
+});
+
+scrollTopBtn.addEventListener('mouseover', () => {
+  scrollTopBtn.style.background = '#E8C98A';
+  scrollTopBtn.style.transform = 'translateY(-3px)';
+});
+
+scrollTopBtn.addEventListener('mouseout', () => {
+  scrollTopBtn.style.background = '#C9A96E';
+  scrollTopBtn.style.transform = 'translateY(0)';
+});
+
 // ── NAV TOGGLE ──
 function toggleNav() {
   document.getElementById('navbar').classList.toggle('nav-open');
@@ -1733,5 +1753,28 @@ document.querySelectorAll('.feature-card, .pricing-card, .step').forEach(el => {
   observer.observe(el);
 });
 </script>
+<!-- SCROLL TO TOP -->
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="
+  position:fixed;
+  bottom:32px;
+  right:32px;
+  width:48px;
+  height:48px;
+  background:#C9A96E;
+  border:none;
+  border-radius:2px;
+  cursor:pointer;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:98;
+  transition:all 0.3s ease;
+  box-shadow:0 8px 32px rgba(201,169,110,0.3);
+">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="#080808">
+    <path d="M12 4l-8 8h5v8h6v-8h5z"/>
+  </svg>
+</button>
+
 </body>
 </html>
