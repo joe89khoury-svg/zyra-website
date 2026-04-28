@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zyra — Live Agent Demo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
   --black: #080808;
@@ -46,11 +46,10 @@ nav {
 }
 
 .nav-logo {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 26px;
-  font-weight: 300;
-  color: var(--white);
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  line-height: 1;
 }
 
 .nav-logo span { color: var(--gold); }
@@ -121,9 +120,9 @@ nav {
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(1.6);} }
 
 .demo-title {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(36px, 6vw, 72px);
-  font-weight: 300;
+  font-weight: 700;
   line-height: 1.05;
   margin-bottom: 16px;
   position: relative;
@@ -177,9 +176,9 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 32px;
-  font-weight: 300;
+  font-weight: 700;
   color: var(--black);
   margin: 0 auto 16px;
   position: relative;
@@ -314,7 +313,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 18px;
   color: var(--black);
 }
@@ -391,7 +390,7 @@ nav {
 
 .msg-row.agent .msg-av {
   background: linear-gradient(135deg, var(--gold), #8B6914);
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 16px;
   color: var(--black);
 }
@@ -514,14 +513,15 @@ nav {
 }
 
 .demo-cta-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(24px, 4vw, 40px);
-  font-weight: 300;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(22px, 4vw, 36px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
   margin-bottom: 12px;
 }
 
 .demo-cta-title em { font-style: italic; color: var(--gold); }
-.demo-cta-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+.demo-cta-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; font-family: 'Syne', sans-serif; }
 
 .btn-primary {
   background: var(--gold);
@@ -549,7 +549,22 @@ nav {
 <body>
 
 <nav>
-  <a href="/" class="nav-logo">Zyra<span>.</span></a>
+  <a href="/" class="nav-logo">
+    <svg width="135" height="36" viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,4 96,50 50,96 4,50" fill="none" stroke="#C9A96E" stroke-width="2.5"/>
+      <polygon points="50,22 74,50 50,78 26,50" fill="rgba(201,169,110,0.07)" stroke="#C9A96E" stroke-width="0.8" stroke-opacity="0.5"/>
+      <line x1="50" y1="4" x2="50" y2="22" stroke="#00E5C3" stroke-width="1.2"/>
+      <line x1="50" y1="78" x2="50" y2="96" stroke="#00E5C3" stroke-width="1.2"/>
+      <circle cx="50" cy="4" r="3.5" fill="#00E5C3"/>
+      <circle cx="96" cy="50" r="2.8" fill="#C9A96E"/>
+      <circle cx="50" cy="96" r="3.5" fill="#00E5C3"/>
+      <circle cx="4" cy="50" r="2.8" fill="#C9A96E"/>
+      <text x="50" y="57" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="28" font-weight="700" fill="#F5F2EE">Z</text>
+      <text font-family="Space Grotesk, sans-serif" font-size="48" font-weight="700" letter-spacing="-2">
+        <tspan x="116" y="66" fill="#F5F2EE">Zyr</tspan><tspan fill="#C9A96E">a</tspan>
+      </text>
+    </svg>
+  </a>
   <a href="/" class="nav-back">← Back to site</a>
 </nav>
 
@@ -712,7 +727,7 @@ function showTyping() {
   t.className = 'typing-row';
   t.id = 'typingIndicator';
   t.innerHTML = `
-    <div class="msg-av" style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#C9A96E,#8B6914);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:16px;color:#080808;">Z</div>
+    <div class="msg-av" style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#C9A96E,#8B6914);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:16px;color:#080808;">Z</div>
     <div class="typing-bubble"><span></span><span></span><span></span></div>
   `;
   messages.appendChild(t);
