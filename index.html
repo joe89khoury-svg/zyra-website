@@ -1060,7 +1060,7 @@ footer {
   </p>
 
   <div class="hero-actions">
-    <a href="#contact" class="btn-primary">Book a Free Demo</a>
+    <button onclick="openDemoModal()" class="btn-primary">Book a Free Demo</button>
     <a href="demo.html" class="btn-ghost">✦ Try Live Demo</a>
   </div>
 </section>
@@ -1207,7 +1207,7 @@ footer {
       <div class="section-label">WhatsApp Agent</div>
       <h2 class="section-title">Where your clients already are.</h2>
       <p class="section-sub" style="margin-bottom:32px;">In the GCC, business happens on WhatsApp. Zyra lives there too, responding instantly, qualifying leads, and booking viewings without a human ever touching the keyboard.</p>
-      <a href="#contact" class="btn-primary">Deploy on WhatsApp</a>
+      <button onclick="openDemoModal()" class="btn-primary">Deploy on WhatsApp</button>
     </div>
 
     <div class="wa-phone">
@@ -1271,7 +1271,7 @@ footer {
         <li>Calendar booking integration</li>
         <li>Email support</li>
       </ul>
-      <a href="#contact" class="btn-ghost" style="width:100%;text-align:center;">Get Started</a>
+      <button onclick="openDemoModal()" class="btn-ghost" style="width:100%;text-align:center;">Get Started</button>
       <p class="pricing-note">Perfect for independent agents and small brokerages.</p>
     </div>
 
@@ -1289,7 +1289,7 @@ footer {
         <li>CRM integration (HubSpot, Zoho)</li>
         <li>Priority support + monthly review call</li>
       </ul>
-      <a href="#contact" class="btn-primary" style="width:100%;text-align:center;">Get Started</a>
+      <button onclick="openDemoModal()" class="btn-primary" style="width:100%;text-align:center;">Get Started</button>
       <p class="pricing-note">Best value for growing real estate agencies.</p>
     </div>
 
@@ -1306,7 +1306,7 @@ footer {
         <li>SLA + 99.9% uptime guarantee</li>
         <li>On-site onboarding available</li>
       </ul>
-      <a href="#contact" class="btn-ghost" style="width:100%;text-align:center;">Contact Us</a>
+      <button onclick="openDemoModal()" class="btn-ghost" style="width:100%;text-align:center;">Contact Us</button>
       <p class="pricing-note">For large brokerages and property developers.</p>
     </div>
 
@@ -1676,9 +1676,11 @@ async function submitDemoForm(e) {
 const scrollTopBtn = document.getElementById('scrollTop');
 window.addEventListener('scroll', () => {
   if (window.scrollY > 400) {
-    scrollTopBtn.style.display = 'flex';
+    scrollTopBtn.style.opacity = '1';
+    scrollTopBtn.style.pointerEvents = 'auto';
   } else {
-    scrollTopBtn.style.display = 'none';
+    scrollTopBtn.style.opacity = '0';
+    scrollTopBtn.style.pointerEvents = 'none';
   }
 });
 
@@ -1764,10 +1766,12 @@ document.querySelectorAll('.feature-card, .pricing-card, .step').forEach(el => {
   border:none;
   border-radius:2px;
   cursor:pointer;
-  display:none;
+  display:flex;
   align-items:center;
   justify-content:center;
   z-index:98;
+  opacity:0;
+  pointer-events:none;
   transition:all 0.3s ease;
   box-shadow:0 8px 32px rgba(201,169,110,0.3);
 ">
