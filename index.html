@@ -1271,7 +1271,7 @@ footer {
         <li>Calendar booking integration</li>
         <li>Email support</li>
       </ul>
-      <button onclick="openDemoModal()" class="btn-ghost" style="width:100%;text-align:center;">Get Started</button>
+      <button onclick="openDemoModal('Starter · $199/month')" class="btn-ghost" style="width:100%;text-align:center;">Get Started</button>
       <p class="pricing-note">Perfect for independent agents and small brokerages.</p>
     </div>
 
@@ -1289,7 +1289,7 @@ footer {
         <li>CRM integration (HubSpot, Zoho)</li>
         <li>Priority support + monthly review call</li>
       </ul>
-      <button onclick="openDemoModal()" class="btn-primary" style="width:100%;text-align:center;">Get Started</button>
+      <button onclick="openDemoModal('Growth · $399/month')" class="btn-primary" style="width:100%;text-align:center;">Get Started</button>
       <p class="pricing-note">Best value for growing real estate agencies.</p>
     </div>
 
@@ -1306,7 +1306,7 @@ footer {
         <li>SLA + 99.9% uptime guarantee</li>
         <li>On-site onboarding available</li>
       </ul>
-      <button onclick="openDemoModal()" class="btn-ghost" style="width:100%;text-align:center;">Contact Us</button>
+      <button onclick="openDemoModal('Enterprise · Custom')" class="btn-ghost" style="width:100%;text-align:center;">Contact Us</button>
       <p class="pricing-note">For large brokerages and property developers.</p>
     </div>
 
@@ -1347,9 +1347,16 @@ footer {
 
     <!-- Form -->
     <form id="demoForm" onsubmit="submitDemoForm(event)">
-      <input type="hidden" name="access_key" value="853cd9d4-0d5d-4b8b-bc3f-3dea033be8c2">
+      <input type="hidden" name="access_key" value="853cd9d4-0d5d-4b8b-bc3f-3dea033be8c2E">
       <input type="hidden" name="subject" value="New Demo Request from zyraagents.com">
       <input type="hidden" name="from_name" value="Zyra Website">
+      <input type="hidden" id="selectedPlan" name="selected_plan" value="">
+
+      <!-- Plan badge -->
+      <div id="planDisplay" style="display:none;align-items:center;gap:10px;padding:10px 14px;background:rgba(201,169,110,0.08);border:1px solid rgba(201,169,110,0.25);border-radius:3px;margin-bottom:20px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:#C9A96E;flex-shrink:0;"></div>
+        <span style="font-family:'DM Mono',monospace;font-size:11px;color:#C9A96E;letter-spacing:0.1em;">SELECTED PLAN: <span id="planName" style="font-weight:700;"></span></span>
+      </div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
         <div>
@@ -1616,10 +1623,22 @@ initNodes();
 tick();
 
 // ── DEMO MODAL ──
-function openDemoModal() {
+function openDemoModal(plan) {
   const modal = document.getElementById('demoModal');
   modal.style.display = 'flex';
   document.body.style.overflow = 'hidden';
+
+  // Show selected plan if provided
+  const planField = document.getElementById('selectedPlan');
+  const planDisplay = document.getElementById('planDisplay');
+  if (plan) {
+    planField.value = plan;
+    planDisplay.style.display = 'flex';
+    document.getElementById('planName').innerText = plan;
+  } else {
+    planField.value = '';
+    planDisplay.style.display = 'none';
+  }
 }
 
 function closeDemoModal() {
@@ -1648,7 +1667,7 @@ async function submitDemoForm(e) {
   const object = Object.fromEntries(formData);
 
   // Build readable message
-  object.message = `First Name: ${object.first_name}\nLast Name: ${object.last_name}\nBusiness: ${object.business_name}\nEmail: ${object.email}\n\nMessage:\n${object.message || 'No message provided'}`;
+  object.message = `First Name: ${object.first_name}\nLast Name: ${object.last_name}\nBusiness: ${object.business_name}\nEmail: ${object.email}\nSelected Plan: ${object.selected_plan || 'Not specified'}\n\nMessage:\n${object.message || 'No message provided'}`;
 
   try {
     const response = await fetch('https://api.web3forms.com/submit', {
@@ -1673,25 +1692,27 @@ async function submitDemoForm(e) {
 }
 
 // ── SCROLL TO TOP ──
-const scrollTopBtn = document.getElementById('scrollTop');
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 400) {
-    scrollTopBtn.style.opacity = '1';
-    scrollTopBtn.style.pointerEvents = 'auto';
-  } else {
-    scrollTopBtn.style.opacity = '0';
-    scrollTopBtn.style.pointerEvents = 'none';
-  }
-});
-
-scrollTopBtn.addEventListener('mouseover', () => {
-  scrollTopBtn.style.background = '#E8C98A';
-  scrollTopBtn.style.transform = 'translateY(-3px)';
-});
-
-scrollTopBtn.addEventListener('mouseout', () => {
-  scrollTopBtn.style.background = '#C9A96E';
-  scrollTopBtn.style.transform = 'translateY(0)';
+document.addEventListener('DOMContentLoaded', () => {
+  const scrollTopBtn = document.getElementById('scrollTop');
+  if (!scrollTopBtn) return;
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) {
+      scrollTopBtn.style.opacity = '1';
+      scrollTopBtn.style.pointerEvents = 'auto';
+      scrollTopBtn.style.transform = 'translateY(0)';
+    } else {
+      scrollTopBtn.style.opacity = '0';
+      scrollTopBtn.style.pointerEvents = 'none';
+    }
+  });
+  scrollTopBtn.addEventListener('mouseover', () => {
+    scrollTopBtn.style.background = '#E8C98A';
+    scrollTopBtn.style.transform = 'translateY(-4px)';
+  });
+  scrollTopBtn.addEventListener('mouseout', () => {
+    scrollTopBtn.style.background = '#C9A96E';
+    scrollTopBtn.style.transform = 'translateY(0)';
+  });
 });
 
 // ── NAV TOGGLE ──
