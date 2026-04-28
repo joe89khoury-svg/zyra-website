@@ -1819,5 +1819,313 @@ document.querySelectorAll('.feature-card, .pricing-card, .step').forEach(el => {
   </svg>
 </button>
 
+<!-- ── ZYRA FLOATING CHAT WIDGET ── -->
+
+<!-- Chat bubble button -->
+<button id="zyraBtn" onclick="toggleZyraChat()" style="
+  position:fixed;
+  bottom:32px;
+  left:32px;
+  width:64px;
+  height:64px;
+  background:linear-gradient(135deg,#C9A96E,#9A6F2E);
+  border:none;
+  border-radius:2px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+  box-shadow:0 8px 32px rgba(201,169,110,0.4);
+  transition:all 0.3s ease;
+">
+  <!-- Diamond Z icon -->
+  <svg id="zyraBtnIcon" width="36" height="36" viewBox="0 0 100 100">
+    <polygon points="50,4 96,50 50,96 4,50" fill="none" stroke="#F5F2EE" stroke-width="3"/>
+    <circle cx="50" cy="4" r="4" fill="#00E5C3"/>
+    <circle cx="96" cy="50" r="3" fill="#F5F2EE"/>
+    <circle cx="50" cy="96" r="4" fill="#00E5C3"/>
+    <circle cx="4" cy="50" r="3" fill="#F5F2EE"/>
+    <text x="50" y="60" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-size="38" font-weight="700" fill="#F5F2EE">Z</text>
+  </svg>
+  <!-- Close icon (hidden by default) -->
+  <svg id="zyraBtnClose" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:none;">
+    <line x1="18" y1="6" x2="6" y2="18" stroke="#F5F2EE" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="6" y1="6" x2="18" y2="18" stroke="#F5F2EE" stroke-width="2.5" stroke-linecap="round"/>
+  </svg>
+
+  <!-- Notification dot -->
+  <div id="zyraNotif" style="
+    position:absolute;
+    top:-4px;right:-4px;
+    width:16px;height:16px;
+    background:#00E5C3;
+    border-radius:50%;
+    border:2px solid #080808;
+    animation:pulse 1.5s ease-in-out infinite;
+  "></div>
+</button>
+
+<!-- Chat window -->
+<div id="zyraChatWindow" style="
+  position:fixed;
+  bottom:112px;
+  left:32px;
+  width:380px;
+  height:540px;
+  background:#0D0D1A;
+  border:1px solid rgba(201,169,110,0.3);
+  border-radius:4px;
+  display:none;
+  flex-direction:column;
+  z-index:998;
+  box-shadow:0 24px 80px rgba(0,0,0,0.6);
+  overflow:hidden;
+  transform:translateY(20px);
+  opacity:0;
+  transition:all 0.3s ease;
+">
+  <!-- Header -->
+  <div style="
+    padding:16px 20px;
+    background:#080808;
+    border-bottom:1px solid rgba(201,169,110,0.15);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-shrink:0;
+  ">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="
+        width:40px;height:40px;
+        border-radius:2px;
+        background:linear-gradient(135deg,#C9A96E,#9A6F2E);
+        display:flex;align-items:center;justify-content:center;
+        position:relative;
+      ">
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:#080808;">Z</span>
+        <div style="position:absolute;bottom:-2px;right:-2px;width:10px;height:10px;background:#00E5C3;border-radius:50%;border:2px solid #0D0D1A;"></div>
+      </div>
+      <div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#F5F2EE;">Zyra</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:#00E5C3;letter-spacing:0.1em;display:flex;align-items:center;gap:5px;">
+          <span style="width:5px;height:5px;border-radius:50%;background:#00E5C3;display:inline-block;animation:pulse 1.5s ease-in-out infinite;"></span>
+          ONLINE
+        </div>
+      </div>
+    </div>
+    <button onclick="toggleZyraChat()" style="background:transparent;border:none;cursor:pointer;color:#6B6B7A;font-size:18px;line-height:1;padding:4px;">✕</button>
+  </div>
+
+  <!-- Messages -->
+  <div id="zyraMsgs" style="
+    flex:1;
+    overflow-y:auto;
+    padding:20px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    scroll-behavior:smooth;
+  "></div>
+
+  <!-- Typing indicator -->
+  <div id="zyraTyping" style="display:none;padding:0 16px 8px;flex-shrink:0;">
+    <div style="display:flex;gap:4px;align-items:center;padding:10px 14px;background:rgba(201,169,110,0.08);border:1px solid rgba(201,169,110,0.15);border-radius:2px 12px 12px 12px;width:fit-content;">
+      <span style="width:6px;height:6px;border-radius:50%;background:#C9A96E;animation:bounce 1.2s ease-in-out infinite;display:inline-block;"></span>
+      <span style="width:6px;height:6px;border-radius:50%;background:#C9A96E;animation:bounce 1.2s ease-in-out infinite 0.2s;display:inline-block;"></span>
+      <span style="width:6px;height:6px;border-radius:50%;background:#C9A96E;animation:bounce 1.2s ease-in-out infinite 0.4s;display:inline-block;"></span>
+    </div>
+  </div>
+
+  <!-- Input -->
+  <div style="
+    padding:12px 16px;
+    border-top:1px solid rgba(255,255,255,0.06);
+    background:#080808;
+    flex-shrink:0;
+    display:flex;
+    gap:10px;
+    align-items:flex-end;
+  ">
+    <textarea id="zyraInput" rows="1"
+      placeholder="Ask Zyra anything..."
+      onkeydown="handleZyraKey(event)"
+      oninput="autoResizeZyra(this)"
+      style="
+        flex:1;
+        background:rgba(255,255,255,0.04);
+        border:1px solid rgba(255,255,255,0.08);
+        border-radius:3px;
+        padding:10px 14px;
+        color:#F5F2EE;
+        font-family:'Syne',sans-serif;
+        font-size:13px;
+        resize:none;
+        outline:none;
+        max-height:100px;
+        line-height:1.5;
+        transition:border 0.2s;
+      "
+      onfocus="this.style.borderColor='rgba(201,169,110,0.4)'"
+      onblur="this.style.borderColor='rgba(255,255,255,0.08)'"
+    ></textarea>
+    <button onclick="sendZyraMsg()" id="zyraSendBtn" style="
+      width:40px;height:40px;
+      background:#C9A96E;
+      border:none;
+      border-radius:3px;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      transition:all 0.2s;
+    ">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="#080808">
+        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<style>
+@keyframes bounce {
+  0%,100%{transform:translateY(0);opacity:0.4;}
+  50%{transform:translateY(-4px);opacity:1;}
+}
+</style>
+
+<script>
+// ── ZYRA WIDGET ──
+const WIDGET_API = 'https://zyra-agent-xi.vercel.app/api/chat';
+let widgetHistory = [];
+let widgetOpen = false;
+let widgetLoading = false;
+let widgetStarted = false;
+
+function toggleZyraChat() {
+  widgetOpen = !widgetOpen;
+  const win = document.getElementById('zyraChatWindow');
+  const icon = document.getElementById('zyraBtnIcon');
+  const close = document.getElementById('zyraBtnClose');
+  const notif = document.getElementById('zyraNotif');
+  const btn = document.getElementById('zyraBtn');
+
+  if (widgetOpen) {
+    win.style.display = 'flex';
+    notif.style.display = 'none';
+    icon.style.display = 'none';
+    close.style.display = 'block';
+    btn.style.background = 'linear-gradient(135deg,#080808,#0D0D1A)';
+    btn.style.border = '1px solid rgba(201,169,110,0.3)';
+    setTimeout(() => {
+      win.style.opacity = '1';
+      win.style.transform = 'translateY(0)';
+    }, 10);
+    if (!widgetStarted) {
+      widgetStarted = true;
+      setTimeout(() => {
+        addWidgetMsg('agent', "مرحباً! I'm Zyra, your AI real estate assistant. Whether you're looking to buy, rent, or learn about our AI agents — I'm here to help. What can I do for you today?");
+      }, 400);
+    }
+  } else {
+    win.style.opacity = '0';
+    win.style.transform = 'translateY(20px)';
+    icon.style.display = 'block';
+    close.style.display = 'none';
+    btn.style.background = 'linear-gradient(135deg,#C9A96E,#9A6F2E)';
+    btn.style.border = 'none';
+    setTimeout(() => { win.style.display = 'none'; }, 300);
+  }
+}
+
+async function sendZyraMsg() {
+  const input = document.getElementById('zyraInput');
+  const text = input.value.trim();
+  if (!text || widgetLoading) return;
+
+  input.value = '';
+  autoResizeZyra(input);
+  addWidgetMsg('user', text);
+  widgetHistory.push({ role: 'user', content: text });
+
+  widgetLoading = true;
+  document.getElementById('zyraSendBtn').disabled = true;
+  document.getElementById('zyraTyping').style.display = 'block';
+  scrollWidgetToBottom();
+
+  try {
+    const res = await fetch(WIDGET_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: widgetHistory })
+    });
+    const data = await res.json();
+    document.getElementById('zyraTyping').style.display = 'none';
+
+    if (data.content && data.content[0]) {
+      const reply = data.content[0].text;
+      widgetHistory.push({ role: 'assistant', content: reply });
+      addWidgetMsg('agent', reply);
+    }
+  } catch(e) {
+    document.getElementById('zyraTyping').style.display = 'none';
+    addWidgetMsg('agent', 'Connection issue. Please try again.');
+  }
+
+  widgetLoading = false;
+  document.getElementById('zyraSendBtn').disabled = false;
+}
+
+function addWidgetMsg(role, text) {
+  const msgs = document.getElementById('zyraMsgs');
+  const isRTL = /[\u0600-\u06FF]/.test(text);
+  const div = document.createElement('div');
+  div.style.cssText = `display:flex;gap:8px;align-items:flex-end;${role==='user'?'flex-direction:row-reverse;':''}`;
+
+  const avatar = document.createElement('div');
+  avatar.style.cssText = `width:28px;height:28px;border-radius:${role==='agent'?'2px':'50%'};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;${role==='agent'?'background:linear-gradient(135deg,#C9A96E,#9A6F2E);color:#080808;font-family:Space Grotesk,sans-serif;':'background:rgba(255,255,255,0.08);color:#F5F2EE;'}`;
+  avatar.textContent = role === 'agent' ? 'Z' : '👤';
+
+  const bubble = document.createElement('div');
+  bubble.style.cssText = `max-width:78%;padding:10px 14px;font-size:13px;line-height:1.6;font-family:Syne,sans-serif;${role==='agent'?'background:rgba(201,169,110,0.08);border:1px solid rgba(201,169,110,0.15);border-radius:2px 12px 12px 12px;color:#F5F2EE;':'background:rgba(0,229,195,0.08);border:1px solid rgba(0,229,195,0.15);border-radius:12px 2px 12px 12px;color:#F5F2EE;'}`;
+  bubble.dir = isRTL ? 'rtl' : 'ltr';
+  bubble.innerHTML = text.replace(/\n/g, '<br>');
+
+  div.appendChild(avatar);
+  div.appendChild(bubble);
+  msgs.appendChild(div);
+
+  // Animate in
+  div.style.opacity = '0';
+  div.style.transform = 'translateY(8px)';
+  div.style.transition = 'all 0.3s ease';
+  setTimeout(() => { div.style.opacity='1'; div.style.transform='translateY(0)'; }, 10);
+
+  scrollWidgetToBottom();
+}
+
+function scrollWidgetToBottom() {
+  const msgs = document.getElementById('zyraMsgs');
+  setTimeout(() => { msgs.scrollTop = msgs.scrollHeight; }, 50);
+}
+
+function handleZyraKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendZyraMsg(); }
+}
+
+function autoResizeZyra(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+// Show notification dot after 3 seconds if chat not opened
+setTimeout(() => {
+  if (!widgetOpen) {
+    document.getElementById('zyraNotif').style.display = 'block';
+  }
+}, 3000);
+</script>
+
 </body>
 </html>
