@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zyra — AI Agents for Real Estate</title>
+<title>Zyra · AI Agents for Real Estate</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
   --black: #080808;
@@ -46,15 +46,19 @@ nav {
 }
 
 .nav-logo {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 28px;
-  font-weight: 300;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
   color: var(--white);
   text-decoration: none;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.03em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.nav-logo span { color: var(--gold); }
+.nav-logo .wordmark { letter-spacing: -0.03em; }
+.nav-logo span { color: var(--gold); letter-spacing: -0.03em; }
 
 .nav-links {
   display: flex;
@@ -117,6 +121,15 @@ nav {
   overflow: hidden;
 }
 
+#heroCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.7;
+}
+
 .grid-bg {
   position: absolute;
   inset: 0;
@@ -172,11 +185,11 @@ nav {
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.5;transform:scale(1.5);} }
 
 .hero-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(52px, 9vw, 130px);
-  font-weight: 300;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(44px, 8vw, 110px);
+  font-weight: 700;
   line-height: 0.95;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
   margin-bottom: 32px;
   position: relative;
   z-index: 2;
@@ -270,7 +283,6 @@ nav {
   grid-template-columns: repeat(4, 1fr);
   gap: 2px;
 }
-
 .stat-item {
   text-align: center;
   padding: 20px;
@@ -288,9 +300,10 @@ nav {
 .stat-item:last-child::after { display:none; }
 
 .stat-number {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(36px, 5vw, 56px);
-  font-weight: 300;
+  font-weight: 700;
+  letter-spacing: -0.04em;
   color: var(--gold);
   line-height: 1;
   margin-bottom: 8px;
@@ -331,10 +344,11 @@ nav {
 }
 
 .section-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(36px, 5vw, 64px);
-  font-weight: 300;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 700;
   line-height: 1.05;
+  letter-spacing: -0.03em;
   margin-bottom: 20px;
 }
 
@@ -471,7 +485,7 @@ nav {
   font-weight: 700;
 }
 
-.msg-agent .msg-avatar { background: var(--gold); color: var(--black); font-family:'Cormorant Garamond',serif; font-size:16px; }
+.msg-agent .msg-avatar { background: var(--gold); color: var(--black); font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; }
 .msg-user .msg-avatar { background: rgba(255,255,255,0.1); color:var(--white); font-size:12px; }
 
 .msg-bubble {
@@ -652,12 +666,13 @@ nav {
 }
 
 .pricing-price {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(48px, 6vw, 72px);
-  font-weight: 300;
+  font-weight: 700;
   line-height: 1;
   margin-bottom: 4px;
   color: var(--white);
+  letter-spacing: -0.03em;
 }
 
 .pricing-price sup {
@@ -744,8 +759,8 @@ nav {
   border-radius:50%;
   background: var(--gold);
   display:flex;align-items:center;justify-content:center;
-  font-family:'Cormorant Garamond',serif;
-  font-size:18px;color:var(--black);font-weight:300;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:16px;color:var(--black);font-weight:700;
 }
 
 .wa-name { font-size:14px;font-weight:600;color:#E9EDEF; }
@@ -823,11 +838,11 @@ nav {
 }
 
 .test-quote {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 22px;
-  font-weight: 300;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
   font-style: italic;
-  line-height: 1.5;
+  line-height: 1.6;
   margin-bottom: 28px;
   color: rgba(245,242,238,0.85);
 }
@@ -895,10 +910,14 @@ footer {
 }
 
 .footer-logo {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 36px;
-  font-weight: 300;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .footer-logo span { color: var(--gold); }
@@ -1003,7 +1022,20 @@ footer {
 
 <!-- NAV -->
 <nav id="navbar">
-  <a href="#" class="nav-logo">Zyra<span>.</span></a>
+  <a href="#" class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 54 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="27,2 52,29 27,56 2,29" stroke="#C9A96E" stroke-width="1.8" fill="none"/>
+      <polygon points="27,14 40,29 27,44 14,29" stroke="#C9A96E" stroke-width="0.6" fill="rgba(201,169,110,0.06)"/>
+      <line x1="27" y1="2" x2="27" y2="14" stroke="#00E5C3" stroke-width="1"/>
+      <line x1="27" y1="44" x2="27" y2="56" stroke="#00E5C3" stroke-width="1"/>
+      <circle cx="27" cy="2" r="2.5" fill="#00E5C3"/>
+      <circle cx="52" cy="29" r="2" fill="#C9A96E"/>
+      <circle cx="27" cy="56" r="2.5" fill="#00E5C3"/>
+      <circle cx="2" cy="29" r="2" fill="#C9A96E"/>
+      <text x="27" y="34" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#F5F2EE">Z</text>
+    </svg>
+    <span class="wordmark">Zyr<span style="color:var(--gold);">a</span></span>
+  </a>
   <ul class="nav-links">
     <li><a href="#how">How It Works</a></li>
     <li><a href="#features">Features</a></li>
@@ -1017,10 +1049,8 @@ footer {
 
 <!-- HERO -->
 <section class="hero">
+  <canvas id="heroCanvas"></canvas>
   <div class="grid-bg"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
 
   <div class="hero-badge">
     <div class="badge-dot"></div>
@@ -1034,7 +1064,7 @@ footer {
   </h1>
 
   <p class="hero-sub">
-    AI agents that qualify leads, book viewings, and respond to clients in Arabic and English — 24 hours a day, 7 days a week, at a fraction of the cost of a single employee.
+    AI agents that qualify leads, book viewings, and respond to clients in Arabic and English, 24 hours a day, 7 days a week, at a fraction of the cost of a single employee.
   </p>
 
   <div class="hero-actions">
@@ -1075,14 +1105,14 @@ footer {
         <div class="step-num">01</div>
         <div>
           <div class="step-title">We set up your agent</div>
-          <div class="step-desc">We train Zyra on your listings, pricing, FAQs, and brand voice. Your agent is live within 48 hours — no code required from your side.</div>
+          <div class="step-desc">We train Zyra on your listings, pricing, FAQs, and brand voice. Your agent is live within 48 hours, no code required from your side.</div>
         </div>
       </div>
       <div class="step">
         <div class="step-num">02</div>
         <div>
           <div class="step-title">Leads arrive. Zyra responds instantly</div>
-          <div class="step-desc">Whether through WhatsApp, your website, or Instagram DMs — Zyra picks up every inquiry within 3 seconds, in Arabic or English.</div>
+          <div class="step-desc">Whether through WhatsApp, your website, or Instagram DMs. Zyra picks up every inquiry within 3 seconds, in Arabic or English.</div>
         </div>
       </div>
       <div class="step">
@@ -1096,7 +1126,7 @@ footer {
         <div class="step-num">04</div>
         <div>
           <div class="step-title">You close. Zyra handles the rest</div>
-          <div class="step-desc">Follow-ups, reminders, FAQs, post-visit messages — Zyra keeps every lead warm while you focus on deals that matter.</div>
+          <div class="step-desc">Follow-ups, reminders, FAQs, post-visit messages. Zyra keeps every lead warm while you focus on deals that matter.</div>
         </div>
       </div>
     </div>
@@ -1128,7 +1158,7 @@ footer {
   <div class="features-inner" id="features">
     <div class="section-label">Features</div>
     <h2 class="section-title">Everything your team<br>wishes it could do.</h2>
-    <p class="section-sub">Zyra doesn't just chat. It works — executing real tasks, qualifying real leads, booking real appointments.</p>
+    <p class="section-sub">Zyra doesn't just chat. It works, executing real tasks, qualifying real leads, booking real appointments.</p>
 
     <div class="features-grid">
 
@@ -1142,7 +1172,7 @@ footer {
       <div class="feature-card">
         <div class="feature-icon">💬</div>
         <div class="feature-title">WhatsApp Integration</div>
-        <div class="feature-desc">Deploy directly on WhatsApp Business — the dominant channel in the GCC. Clients reach you where they already are, and Zyra is ready.</div>
+        <div class="feature-desc">Deploy directly on WhatsApp Business, the dominant channel in the GCC. Clients reach you where they already are, and Zyra is ready.</div>
         <span class="feature-tag">GCC-FIRST</span>
       </div>
 
@@ -1170,7 +1200,7 @@ footer {
       <div class="feature-card">
         <div class="feature-icon">⚙️</div>
         <div class="feature-title">Custom Training</div>
-        <div class="feature-desc">Zyra learns your listings, your tone, your business rules. It sounds exactly like your best agent — not a generic bot.</div>
+        <div class="feature-desc">Zyra learns your listings, your tone, your business rules. It sounds exactly like your best agent, not a generic bot.</div>
         <span class="feature-tag">TAILORED TO YOU</span>
       </div>
 
@@ -1184,7 +1214,7 @@ footer {
     <div>
       <div class="section-label">WhatsApp Agent</div>
       <h2 class="section-title">Where your clients already are.</h2>
-      <p class="section-sub" style="margin-bottom:32px;">In the GCC, business happens on WhatsApp. Zyra lives there too — responding instantly, qualifying leads, and booking viewings without a human ever touching the keyboard.</p>
+      <p class="section-sub" style="margin-bottom:32px;">In the GCC, business happens on WhatsApp. Zyra lives there too, responding instantly, qualifying leads, and booking viewings without a human ever touching the keyboard.</p>
       <a href="#contact" class="btn-primary">Deploy on WhatsApp</a>
     </div>
 
@@ -1302,7 +1332,7 @@ footer {
     <em>live in 48 hours.</em>
   </h2>
   <p class="section-sub">
-    Book a free 30-minute demo. We'll show you exactly how Zyra works for your business — no commitment required.
+    Book a free 30-minute demo. We'll show you exactly how Zyra works for your business. No commitment required.
   </p>
   <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:48px;">
     <a href="mailto:hello@zyra.ai" class="btn-primary">Book Your Free Demo</a>
@@ -1315,7 +1345,17 @@ footer {
 <footer>
   <div class="footer-inner">
     <div>
-      <div class="footer-logo">Zyra<span>.</span></div>
+      <div class="footer-logo">
+    <svg width="24" height="26" viewBox="0 0 54 58" fill="none">
+      <polygon points="27,2 52,29 27,56 2,29" stroke="#C9A96E" stroke-width="2" fill="none"/>
+      <circle cx="27" cy="2" r="3" fill="#00E5C3"/>
+      <circle cx="52" cy="29" r="2.5" fill="#C9A96E"/>
+      <circle cx="27" cy="56" r="3" fill="#00E5C3"/>
+      <circle cx="2" cy="29" r="2.5" fill="#C9A96E"/>
+      <text x="27" y="35" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-size="16" font-weight="700" fill="#F5F2EE">Z</text>
+    </svg>
+    <span class="wordmark">Zyr<span style="color:var(--gold);">a</span></span>
+  </div>
       <p class="footer-tagline">AI agents built for the Middle East. From Beirut, for the world.</p>
       <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--electric);letter-spacing:0.1em;">hello@zyra.ai</div>
     </div>
@@ -1354,7 +1394,151 @@ footer {
 </footer>
 
 <script>
-// Nav toggle
+// ── NEURAL NETWORK HERO ANIMATION ──
+const canvas = document.getElementById('heroCanvas');
+const ctx = canvas.getContext('2d');
+
+let W, H, nodes, animFrame;
+
+const GOLD   = 'rgba(201,169,110,';
+const ELEC   = 'rgba(0,229,195,';
+const WHITE  = 'rgba(245,242,238,';
+const NODE_COUNT = 52;
+const MAX_DIST = 160;
+
+function resize() {
+  W = canvas.width  = canvas.offsetWidth;
+  H = canvas.height = canvas.offsetHeight;
+}
+
+function initNodes() {
+  nodes = Array.from({length: NODE_COUNT}, (_, i) => ({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: (Math.random() - 0.5) * 0.4,
+    r: Math.random() * 2.5 + 1,
+    type: i < 6 ? 'hub' : i < 18 ? 'mid' : 'small',
+    pulse: Math.random() * Math.PI * 2,
+    pulseSpeed: 0.02 + Math.random() * 0.02,
+    active: Math.random() > 0.6,
+    color: Math.random() > 0.7 ? 'electric' : 'gold'
+  }));
+}
+
+function drawDiamond(x, y, size, alpha, color) {
+  ctx.beginPath();
+  ctx.moveTo(x, y - size);
+  ctx.lineTo(x + size, y);
+  ctx.lineTo(x, y + size);
+  ctx.lineTo(x - size, y);
+  ctx.closePath();
+  const col = color === 'electric' ? ELEC : GOLD;
+  ctx.strokeStyle = col + alpha + ')';
+  ctx.lineWidth = 0.8;
+  ctx.stroke();
+}
+
+function tick() {
+  ctx.clearRect(0, 0, W, H);
+
+  nodes.forEach(n => {
+    n.x += n.vx;
+    n.y += n.vy;
+    n.pulse += n.pulseSpeed;
+    if (n.x < 0 || n.x > W) n.vx *= -1;
+    if (n.y < 0 || n.y > H) n.vy *= -1;
+  });
+
+  // Draw connections
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const a = nodes[i], b = nodes[j];
+      const dx = a.x - b.x, dy = a.y - b.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < MAX_DIST) {
+        const alpha = (1 - dist / MAX_DIST) * 0.35;
+        const isActive = a.active && b.active;
+        const col = (a.color === 'electric' || b.color === 'electric') ? ELEC : GOLD;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = col + (isActive ? alpha * 1.6 : alpha * 0.5) + ')';
+        ctx.lineWidth = isActive ? 0.8 : 0.3;
+        ctx.stroke();
+
+        // Data packet animation on active connections
+        if (isActive && Math.random() > 0.997) {
+          const t = (Math.sin(Date.now() * 0.003) + 1) / 2;
+          const px = a.x + (b.x - a.x) * t;
+          const py = a.y + (b.y - a.y) * t;
+          ctx.beginPath();
+          ctx.arc(px, py, 2, 0, Math.PI * 2);
+          ctx.fillStyle = col + '0.9)';
+          ctx.fill();
+        }
+      }
+    }
+  }
+
+  // Draw nodes
+  nodes.forEach(n => {
+    const pulse = Math.sin(n.pulse) * 0.5 + 0.5;
+    const col = n.color === 'electric' ? ELEC : GOLD;
+
+    if (n.type === 'hub') {
+      // Hub nodes — diamond shape
+      const s = 8 + pulse * 3;
+      drawDiamond(n.x, n.y, s, 0.7 + pulse * 0.3, n.color);
+      // Inner dot
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = col + '0.9)';
+      ctx.fill();
+      // Outer ring
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, s + 4 + pulse * 4, 0, Math.PI * 2);
+      ctx.strokeStyle = col + (0.1 + pulse * 0.1) + ')';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    } else if (n.type === 'mid') {
+      // Mid nodes — circle with ring
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r + 1, 0, Math.PI * 2);
+      ctx.fillStyle = col + (0.6 + pulse * 0.4) + ')';
+      ctx.fill();
+      if (n.active) {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r + 4 + pulse * 3, 0, Math.PI * 2);
+        ctx.strokeStyle = col + (0.15 + pulse * 0.1) + ')';
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    } else {
+      // Small nodes — dots
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r * 0.7, 0, Math.PI * 2);
+      ctx.fillStyle = col + (0.3 + pulse * 0.3) + ')';
+      ctx.fill();
+    }
+  });
+
+  animFrame = requestAnimationFrame(tick);
+}
+
+// Occasionally toggle active status for dynamic feel
+setInterval(() => {
+  nodes.forEach(n => {
+    if (Math.random() > 0.85) n.active = !n.active;
+  });
+}, 2000);
+
+window.addEventListener('resize', () => { resize(); });
+resize();
+initNodes();
+tick();
+
+// ── NAV TOGGLE ──
 function toggleNav() {
   document.getElementById('navbar').classList.toggle('nav-open');
 }
@@ -1365,7 +1549,7 @@ const messages = [
   { type: 'user',  text: 'Looking to rent a 2BR in Dubai Marina' },
   { type: 'agent', text: 'Great choice! We have 4 available units there. What\'s your monthly budget?' },
   { type: 'user',  text: 'Around 10,000 AED per month' },
-  { type: 'agent', text: 'Perfect — I have 2 units that match exactly. Can I book you a viewing this week? Thursday at 5pm works great.' },
+  { type: 'agent', text: 'Perfect, I have 2 units that match exactly. Can I book you a viewing this week? Thursday at 5pm works great.' },
   { type: 'user',  text: 'Thursday works for me!' },
   { type: 'agent', text: '✅ Viewing confirmed for Thursday at 5pm. You\'ll receive a WhatsApp confirmation shortly. Anything else I can help with?' },
 ];
