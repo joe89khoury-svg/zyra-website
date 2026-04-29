@@ -1974,7 +1974,7 @@ document.querySelectorAll('.feature-card, .pricing-card, .step').forEach(el => {
 </style>
 
 <script>
-// ── ZYRA MULTI-AGENT WIDGET ──
+// ZYRA MULTI-AGENT WIDGET
 const WIDGET_API = 'https://zyra-agent-xi.vercel.app/api/chat';
 let widgetHistory = [];
 let widgetOpen = false;
@@ -1983,66 +1983,64 @@ let currentAgent = null;
 
 const AGENTS = {
   realestate: {
-    name: 'Zyra \u00b7 Real Estate',
+    name: 'Zyra - Real Estate',
     role: 'REAL ESTATE AGENT',
-    emoji: '\ud83c\udfe0',
-    greeting: '\u0645\u0631\u062d\u0628\u0627\u064b! I\'m Zyra, your AI real estate assistant. Are you looking to buy, rent, or invest in a property today?',
-    prompt: 'You are Zyra, a professional AI real estate assistant for a premium agency in the Middle East. You speak Arabic and English fluently. Help clients find properties by asking about budget, location, property type and timeline. Available demo listings: 1. 2BR Apartment Dubai Marina AED 110000/year furnished sea view. 2. 1BR Downtown Dubai AED 95000/year Burj Khalifa view. 3. 3BR Villa Arabian Ranches AED 220000/year private pool. 4. Studio JVC AED 55000/year furnished. Present matching listings clearly. Collect name and contact before confirming anything. Never share phone numbers. Keep responses under 5 lines. If Arabic respond in Arabic.'
+    greeting: 'Hello! I am Zyra, your AI real estate assistant. Are you looking to buy, rent, or invest in a property today?',
+    prompt: 'You are Zyra, a professional AI real estate assistant in the Middle East. Speak Arabic and English. Help clients find properties. Ask about budget, location, property type and timeline. Demo listings: 1. 2BR Dubai Marina AED 110000/year furnished sea view. 2. 1BR Downtown Dubai AED 95000/year. 3. 3BR Villa Arabian Ranches AED 220000/year pool. 4. Studio JVC AED 55000/year. Present matching listings. Collect name and contact. Never share phone numbers. Keep responses under 5 lines.'
   },
   legal: {
-    name: 'Zyra \u00b7 Legal',
+    name: 'Zyra - Legal',
     role: 'LEGAL ASSISTANT',
-    emoji: '\u2696\ufe0f',
-    greeting: 'Hello! I\'m Zyra, your AI legal assistant. I can help you understand your legal options and connect you with the right attorney. What legal matter can I help you with today?',
-    prompt: 'You are Zyra, a professional AI legal intake assistant for a law firm in the Middle East. You speak Arabic and English. Understand the client legal issue, qualify the case, and collect contact details for an attorney consultation. You handle civil cases, real estate disputes, contract issues, business law, family law. Never give specific legal advice, say our attorneys will advise you. Ask about nature of issue, urgency, location, name and contact. Keep responses under 4 lines.'
+    greeting: 'Hello! I am Zyra, your AI legal assistant. I can help connect you with the right attorney. What legal matter can I help you with today?',
+    prompt: 'You are Zyra, a professional AI legal intake assistant for a law firm in the Middle East. Speak Arabic and English. Understand the client legal issue and collect contact details for an attorney. Handle civil, real estate, contract, business, family law. Never give legal advice. Ask about nature of issue, urgency, location, name and contact. Keep responses under 4 lines.'
   },
   clinic: {
-    name: 'Zyra \u00b7 Medical',
+    name: 'Zyra - Medical',
     role: 'CLINIC ASSISTANT',
-    emoji: '\ud83c\udfe5',
-    greeting: 'Hello! I\'m Zyra, your clinic assistant. I can help you book an appointment or answer questions about our services. How can I help you today?',
-    prompt: 'You are Zyra, a professional AI assistant for a medical clinic in the Middle East. You speak Arabic and English. Help patients understand available services and collect their details to book an appointment. Services: General practice, dermatology, cardiology, pediatrics, dental. Never give medical diagnoses or advice, always say our doctor will assess you. Ask about reason for visit, preferred specialty, available days, name and contact. Be warm and caring. Keep responses under 4 lines.'
+    greeting: 'Hello! I am Zyra, your clinic assistant. I can help you book an appointment or answer questions. How can I help you today?',
+    prompt: 'You are Zyra, a professional AI assistant for a medical clinic in the Middle East. Speak Arabic and English. Help patients book appointments. Services: General practice, dermatology, cardiology, pediatrics, dental. Never give medical diagnoses. Ask about reason for visit, specialty needed, preferred days, name and contact. Be warm and caring. Keep responses under 4 lines.'
   },
   assistant: {
-    name: 'Zyra \u00b7 Assistant',
+    name: 'Zyra - Assistant',
     role: 'BUSINESS ASSISTANT',
-    emoji: '\ud83e\udd1d',
-    greeting: 'Hi there! I\'m Zyra, a personal business assistant. I can answer questions about services, schedule meetings, or take a message. What can I do for you?',
-    prompt: 'You are Zyra, a professional AI personal business assistant. You speak Arabic and English. Represent the business professionally, answer questions about services, and schedule meetings. For meeting requests ask for preferred date, time and purpose of meeting then collect name and contact. Be sharp, professional and efficient like a top executive assistant. Keep responses under 4 lines.'
+    greeting: 'Hi there! I am Zyra, a personal business assistant. I can schedule meetings or answer your questions. What can I do for you?',
+    prompt: 'You are Zyra, a professional AI personal business assistant. Speak Arabic and English. Represent the business, answer questions, schedule meetings. For meetings ask for date, time and purpose then collect name and contact. Be sharp and professional like a top executive assistant. Keep responses under 4 lines.'
   },
   ecommerce: {
-    name: 'Zyra \u00b7 Store',
+    name: 'Zyra - Store',
     role: 'STORE ASSISTANT',
-    emoji: '\ud83d\uded2',
-    greeting: 'Hey! Welcome to our store. I\'m Zyra, your shopping assistant. I can help you find products, track orders, or answer any questions. What are you looking for today?',
-    prompt: 'You are Zyra, a friendly AI shopping assistant for an e-commerce store in the Middle East. You speak Arabic and English. Help customers find products, answer product questions, handle order inquiries, and process return requests. Delivery is 2-5 business days UAE, 5-7 days GCC. Free shipping over AED 200. Returns policy is 14 days. Collect order number for order inquiries. Be friendly and helpful. Keep responses under 4 lines.'
+    greeting: 'Hey! Welcome! I am Zyra, your shopping assistant. I can help you find products or track orders. What are you looking for today?',
+    prompt: 'You are Zyra, a friendly AI shopping assistant in the Middle East. Speak Arabic and English. Help customers find products, answer questions, handle orders and returns. Delivery 2-5 days UAE, 5-7 days GCC. Free shipping over AED 200. Returns within 14 days. Collect order number for inquiries. Be friendly. Keep responses under 4 lines.'
   }
 };
 
 function toggleZyraChat() {
   widgetOpen = !widgetOpen;
-  const win = document.getElementById('zyraChatWindow');
-  const icon = document.getElementById('zyraBtnIcon');
-  const close = document.getElementById('zyraBtnClose');
-  const notif = document.getElementById('zyraNotif');
-  const btn = document.getElementById('zyraBtn');
+  var win = document.getElementById('zyraChatWindow');
+  var icon = document.getElementById('zyraBtnIcon');
+  var closeIcon = document.getElementById('zyraBtnClose');
+  var notif = document.getElementById('zyraNotif');
+  var btn = document.getElementById('zyraBtn');
 
   if (widgetOpen) {
     win.style.display = 'flex';
-    notif.style.display = 'none';
-    icon.style.display = 'none';
-    close.style.display = 'block';
+    if (notif) notif.style.display = 'none';
+    if (icon) icon.style.display = 'none';
+    if (closeIcon) closeIcon.style.display = 'block';
     btn.style.background = 'linear-gradient(135deg,#080808,#0D0D1A)';
     btn.style.border = '1px solid rgba(201,169,110,0.3)';
-    setTimeout(() => { win.style.opacity = '1'; win.style.transform = 'translateY(0)'; }, 10);
+    setTimeout(function() {
+      win.style.opacity = '1';
+      win.style.transform = 'translateY(0)';
+    }, 10);
   } else {
     win.style.opacity = '0';
     win.style.transform = 'translateY(20px)';
-    icon.style.display = 'block';
-    close.style.display = 'none';
+    if (icon) icon.style.display = 'block';
+    if (closeIcon) closeIcon.style.display = 'none';
     btn.style.background = 'linear-gradient(135deg,#C9A96E,#9A6F2E)';
     btn.style.border = 'none';
-    setTimeout(() => { win.style.display = 'none'; }, 300);
+    setTimeout(function() { win.style.display = 'none'; }, 300);
   }
 }
 
@@ -2058,29 +2056,27 @@ function showAgentSelector() {
 }
 
 function selectAgent(type) {
-  const agent = AGENTS[type];
+  var agent = AGENTS[type];
+  if (!agent) return;
   currentAgent = agent;
   widgetHistory = [];
 
-  // Update header
   document.getElementById('widgetAgentName').textContent = agent.name;
   document.getElementById('widgetAgentRole').textContent = agent.role;
   document.getElementById('widgetBackBtn').style.display = 'block';
-
-  // Switch screens
   document.getElementById('agentSelector').style.display = 'none';
-  const chatScreen = document.getElementById('widgetChatScreen');
+
+  var chatScreen = document.getElementById('widgetChatScreen');
   chatScreen.style.display = 'flex';
   chatScreen.style.flexDirection = 'column';
 
-  // Clear messages and greet
   document.getElementById('zyraMsgs').innerHTML = '';
-  setTimeout(() => addWidgetMsg('agent', agent.greeting), 400);
+  setTimeout(function() { addWidgetMsg('agent', agent.greeting); }, 400);
 }
 
 async function sendZyraMsg() {
-  const input = document.getElementById('zyraInput');
-  const text = input.value.trim();
+  var input = document.getElementById('zyraInput');
+  var text = input.value.trim();
   if (!text || widgetLoading || !currentAgent) return;
 
   input.value = '';
@@ -2094,18 +2090,15 @@ async function sendZyraMsg() {
   scrollWidgetToBottom();
 
   try {
-    const res = await fetch(WIDGET_API, {
+    var res = await fetch(WIDGET_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        messages: widgetHistory,
-        system: currentAgent.prompt
-      })
+      body: JSON.stringify({ messages: widgetHistory, system: currentAgent.prompt })
     });
-    const data = await res.json();
+    var data = await res.json();
     document.getElementById('zyraTyping').style.display = 'none';
     if (data.content && data.content[0]) {
-      const reply = data.content[0].text;
+      var reply = data.content[0].text;
       widgetHistory.push({ role: 'assistant', content: reply });
       addWidgetMsg('agent', reply);
     }
@@ -2119,31 +2112,72 @@ async function sendZyraMsg() {
 }
 
 function addWidgetMsg(role, text) {
-  const msgs = document.getElementById('zyraMsgs');
-  const isRTL = /[؀-ۿ]/.test(text);
-  const div = document.createElement('div');
-  div.style.cssText = ; 
-  const avatar = document.createElement('div');
-  avatar.style.cssText = ;
-  avatar.textContent = role === 'agent' ? 'Z' : '👤';
-  const bubble = document.createElement('div');
-  bubble.style.cssText = ;
+  var msgs = document.getElementById('zyraMsgs');
+  var isRTL = /[؀-ۿ]/.test(text);
+
+  var row = document.createElement('div');
+  row.style.display = 'flex';
+  row.style.gap = '8px';
+  row.style.alignItems = 'flex-end';
+  row.style.marginBottom = '4px';
+  if (role === 'user') row.style.flexDirection = 'row-reverse';
+
+  var av = document.createElement('div');
+  av.style.width = '28px';
+  av.style.height = '28px';
+  av.style.borderRadius = role === 'agent' ? '2px' : '50%';
+  av.style.flexShrink = '0';
+  av.style.display = 'flex';
+  av.style.alignItems = 'center';
+  av.style.justifyContent = 'center';
+  av.style.fontSize = '12px';
+  av.style.fontWeight = '700';
+  if (role === 'agent') {
+    av.style.background = 'linear-gradient(135deg,#C9A96E,#9A6F2E)';
+    av.style.color = '#080808';
+    av.style.fontFamily = 'Space Grotesk, sans-serif';
+    av.textContent = 'Z';
+  } else {
+    av.style.background = 'rgba(255,255,255,0.08)';
+    av.style.color = '#F5F2EE';
+    av.textContent = '';
+  }
+
+  var bubble = document.createElement('div');
+  bubble.style.maxWidth = '80%';
+  bubble.style.padding = '10px 14px';
+  bubble.style.fontSize = '13px';
+  bubble.style.lineHeight = '1.6';
+  bubble.style.fontFamily = 'Syne, sans-serif';
   bubble.dir = isRTL ? 'rtl' : 'ltr';
-  bubble.innerHTML = text.replace(/
-/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong></strong>');
-  div.appendChild(avatar);
-  div.appendChild(bubble);
-  msgs.appendChild(div);
-  div.style.opacity = '0';
-  div.style.transform = 'translateY(8px)';
-  div.style.transition = 'all 0.3s ease';
-  setTimeout(() => { div.style.opacity='1'; div.style.transform='translateY(0)'; }, 10);
+  if (role === 'agent') {
+    bubble.style.background = 'rgba(201,169,110,0.08)';
+    bubble.style.border = '1px solid rgba(201,169,110,0.15)';
+    bubble.style.borderRadius = '2px 12px 12px 12px';
+    bubble.style.color = '#F5F2EE';
+  } else {
+    bubble.style.background = 'rgba(0,229,195,0.08)';
+    bubble.style.border = '1px solid rgba(0,229,195,0.15)';
+    bubble.style.borderRadius = '12px 2px 12px 12px';
+    bubble.style.color = '#F5F2EE';
+  }
+  bubble.innerHTML = text.replace(/\n/g, '<br>');
+
+  row.appendChild(av);
+  row.appendChild(bubble);
+  msgs.appendChild(row);
+
+  row.style.opacity = '0';
+  row.style.transform = 'translateY(8px)';
+  row.style.transition = 'all 0.3s ease';
+  setTimeout(function() { row.style.opacity = '1'; row.style.transform = 'translateY(0)'; }, 10);
+
   scrollWidgetToBottom();
 }
 
 function scrollWidgetToBottom() {
-  const msgs = document.getElementById('zyraMsgs');
-  setTimeout(() => { msgs.scrollTop = msgs.scrollHeight; }, 50);
+  var msgs = document.getElementById('zyraMsgs');
+  setTimeout(function() { msgs.scrollTop = msgs.scrollHeight; }, 50);
 }
 
 function handleZyraKey(e) {
@@ -2155,10 +2189,34 @@ function autoResizeZyra(el) {
   el.style.height = Math.min(el.scrollHeight, 100) + 'px';
 }
 
-setTimeout(() => {
-  if (!widgetOpen) document.getElementById('zyraNotif').style.display = 'block';
+// Show notification dot after 3 seconds
+setTimeout(function() {
+  var notif = document.getElementById('zyraNotif');
+  if (notif && !widgetOpen) notif.style.display = 'block';
 }, 3000);
-</script>
 
+// Scroll to top button
+document.addEventListener('DOMContentLoaded', function() {
+  var scrollTopBtn = document.getElementById('scrollTop');
+  if (!scrollTopBtn) return;
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 400) {
+      scrollTopBtn.style.opacity = '1';
+      scrollTopBtn.style.pointerEvents = 'auto';
+    } else {
+      scrollTopBtn.style.opacity = '0';
+      scrollTopBtn.style.pointerEvents = 'none';
+    }
+  });
+  scrollTopBtn.addEventListener('mouseover', function() {
+    scrollTopBtn.style.background = '#E8C98A';
+    scrollTopBtn.style.transform = 'translateY(-4px)';
+  });
+  scrollTopBtn.addEventListener('mouseout', function() {
+    scrollTopBtn.style.background = '#C9A96E';
+    scrollTopBtn.style.transform = 'translateY(0)';
+  });
+});
+</script>
 </body>
 </html>
