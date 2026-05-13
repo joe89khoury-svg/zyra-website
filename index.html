@@ -88,6 +88,8 @@ nav.sc{height:60px;background:rgba(8,8,8,0.96);}
 /* ── LIVE DOT ── */
 .ldot{width:6px;height:6px;border-radius:50%;background:var(--elec);animation:blink 2s infinite;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.25;}}
+@keyframes drift{0%,100%{transform:translate(0,0);}33%{transform:translate(22px,-28px);}66%{transform:translate(-16px,18px);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
 
 /* ══════════════════
    HERO
@@ -306,15 +308,16 @@ footer{background:var(--ink);border-top:1px solid var(--bd);padding:28px 5vw;dis
 <!-- HERO -->
 <section id="hero">
   <div class="grid-bg"></div>
-  <div class="orb" style="width:480px;height:480px;background:rgba(201,169,110,0.09);top:-100px;right:-60px;"></div>
-  <div class="orb" style="width:360px;height:360px;background:rgba(0,229,195,0.06);bottom:-80px;left:-60px;"></div>
+  <div class="orb" style="width:480px;height:480px;background:rgba(201,169,110,0.09);top:-100px;right:-60px;animation:drift 12s ease-in-out infinite;"></div>
+  <div class="orb" style="width:360px;height:360px;background:rgba(0,229,195,0.06);bottom:-80px;left:-60px;animation:drift 14s ease-in-out infinite reverse;"></div>
+  <div class="orb" style="width:280px;height:280px;background:rgba(201,169,110,0.06);top:50%;left:40%;transform:translate(-50%,-50%);animation:drift 10s ease-in-out infinite 2s;"></div>
 
   <div class="hero-inner">
     <div>
-      <div class="eyebrow">Built for Lebanon</div>
-      <h1 class="h1">Your business,<br><span class="g">always on.</span><br>Every message<br>answered.</h1>
-      <p class="sub" style="max-width:520px;margin-bottom:40px;">Zyra builds a custom AI agent trained on your business. It handles every client inquiry, qualifies every lead and responds instantly in Arabic and English on your website and WhatsApp.</p>
-      <div class="hero-actions">
+      <div class="eyebrow" style="animation:fadeUp 0.7s ease forwards;opacity:0;animation-delay:0.1s;">Built for Lebanon</div>
+      <h1 class="h1" style="animation:fadeUp 0.8s ease forwards;opacity:0;animation-delay:0.3s;">Your business,<br><span class="g">always on.</span><br>Every message<br>answered.</h1>
+      <p class="sub" style="max-width:520px;margin-bottom:40px;animation:fadeUp 0.8s ease forwards;opacity:0;animation-delay:0.5s;">Zyra builds a custom AI agent trained on your business. It handles every client inquiry, qualifies every lead and responds instantly in Arabic and English on your website and WhatsApp.</p>
+      <div class="hero-actions" style="animation:fadeUp 0.8s ease forwards;opacity:0;animation-delay:0.7s;">
         <a href="demo.html" class="btn-g">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           Try the Live Demo
@@ -610,6 +613,178 @@ footer{background:var(--ink);border-top:1px solid var(--bd);padding:28px 5vw;dis
     </div>
   </div>
 </section>
+
+<!-- FLOATING CHAT BUBBLE -->
+<style>
+.zyra-bubble{position:fixed;bottom:28px;right:28px;z-index:200;}
+.zyra-bubble-btn{
+  width:60px;height:60px;background:var(--gold);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 32px rgba(201,169,110,0.4);
+  transition:all 0.25s;position:relative;
+}
+.zyra-bubble-btn:hover{background:var(--goldl);transform:translateY(-3px);box-shadow:0 12px 40px rgba(201,169,110,0.55);}
+.zyra-bubble-btn svg{stroke:var(--ink);fill:none;stroke-width:1.5;}
+.zyra-notif{
+  position:absolute;top:-4px;right:-4px;
+  width:14px;height:14px;background:var(--elec);border-radius:50%;
+  border:2px solid var(--ink);animation:blink 2s infinite;
+}
+.zyra-chat-window{
+  position:fixed;bottom:100px;right:28px;z-index:200;
+  width:340px;background:var(--deep);border:1px solid var(--bdg);
+  display:none;flex-direction:column;overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,0.7);
+}
+.zyra-chat-window.open{display:flex;}
+.zcw-header{
+  padding:14px 16px;background:rgba(201,169,110,0.08);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.zcw-agent{display:flex;align-items:center;gap:10px;}
+.zcw-av{
+  width:34px;height:34px;flex-shrink:0;
+  background:var(--gold);display:flex;align-items:center;justify-content:center;
+}
+.zcw-av svg{width:20px;height:20px;}
+.zcw-name{font-size:13px;font-weight:700;color:var(--cream);}
+.zcw-status{font-family:'DM Mono',monospace;font-size:9px;color:var(--elec);letter-spacing:0.15em;display:flex;align-items:center;gap:5px;}
+.zcw-close{background:transparent;border:none;color:var(--fog);font-size:18px;cursor:pointer;line-height:1;padding:2px 4px;transition:color 0.2s;}
+.zcw-close:hover{color:var(--cream);}
+.zcw-msgs{
+  padding:14px;display:flex;flex-direction:column;gap:9px;
+  overflow-y:auto;height:260px;
+}
+.zcw-msgs::-webkit-scrollbar{width:3px;}
+.zcw-msgs::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);}
+.zcw-msg{padding:9px 12px;font-size:12.5px;line-height:1.55;max-width:88%;}
+.zcw-msg.a{background:rgba(201,169,110,0.1);border:1px solid rgba(201,169,110,0.2);color:var(--cream);border-radius:0 8px 8px 8px;align-self:flex-start;}
+.zcw-msg.u{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:var(--fog);border-radius:8px 0 8px 8px;align-self:flex-end;}
+.zcw-typing{display:none;align-items:center;gap:4px;padding:9px 12px;background:rgba(201,169,110,0.07);border:1px solid rgba(201,169,110,0.14);border-radius:0 8px 8px 8px;align-self:flex-start;width:52px;}
+.zcw-typing.show{display:flex;}
+.zcw-typing span{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:td 1.2s infinite;}
+.zcw-typing span:nth-child(2){animation-delay:.2s;}
+.zcw-typing span:nth-child(3){animation-delay:.4s;}
+.zcw-foot{padding:10px 12px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-shrink:0;}
+.zcw-input{
+  flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--border);
+  padding:8px 11px;font-family:'Space Grotesk',sans-serif;font-size:12px;
+  color:var(--cream);outline:none;transition:border-color 0.2s;
+}
+.zcw-input:focus{border-color:rgba(201,169,110,0.35);}
+.zcw-input::placeholder{color:var(--fog);}
+.zcw-send{
+  width:34px;height:34px;background:var(--gold);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:background 0.2s;
+}
+.zcw-send:hover{background:var(--goldl);}
+.zcw-send svg{stroke:var(--ink);fill:none;stroke-width:2.5;}
+.zcw-powered{
+  text-align:center;padding:6px;border-top:1px solid var(--border);
+  font-family:'DM Mono',monospace;font-size:8.5px;color:var(--fog);
+  letter-spacing:0.12em;flex-shrink:0;
+}
+</style>
+
+<div class="zyra-bubble">
+  <div class="zyra-chat-window" id="zyraChatWindow">
+    <div class="zcw-header">
+      <div class="zcw-agent">
+        <div class="zcw-av">
+          <svg viewBox="0 0 100 100">
+            <polygon points="50,4 96,50 50,96 4,50" fill="none" stroke="#080808" stroke-width="2.5"/>
+            <text x="50" y="62" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-size="38" font-weight="700" fill="#080808">Z</text>
+          </svg>
+        </div>
+        <div>
+          <div class="zcw-name">Zyra AI</div>
+          <div class="zcw-status"><div class="ldot"></div>Online now</div>
+        </div>
+      </div>
+      <button class="zcw-close" onclick="toggleZyraChat()">✕</button>
+    </div>
+    <div class="zcw-msgs" id="zcwMsgs">
+      <div class="zcw-typing" id="zcwTyping"><span></span><span></span><span></span></div>
+    </div>
+    <div class="zcw-foot">
+      <input class="zcw-input" id="zcwInput" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter')sendZyraMsg()">
+      <button class="zcw-send" onclick="sendZyraMsg()">
+        <svg width="13" height="13" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+    <div class="zcw-powered">Powered by Zyra AI · zyraagents.com</div>
+  </div>
+
+  <button class="zyra-bubble-btn" onclick="toggleZyraChat()" id="zyraBubbleBtn" aria-label="Chat with Zyra">
+    <div class="zyra-notif" id="zyraNotif"></div>
+    <svg width="26" height="26" viewBox="0 0 100 100">
+      <polygon points="50,4 96,50 50,96 4,50" fill="none" stroke="#080808" stroke-width="3"/>
+      <text x="50" y="63" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-size="40" font-weight="700" fill="#080808">Z</text>
+    </svg>
+  </button>
+</div>
+
+<script>
+let zcwHistory=[];let zcwLoading=false;let zcwOpen=false;
+const ZCW_SYSTEM=`You are Zyra, a friendly and professional AI assistant for Zyra AI (zyraagents.com). You help businesses in Lebanon understand how Zyra's custom AI agents work. You are concise, warm and always move the conversation toward booking a free demo. Keep replies short — 2 to 3 sentences max. Zyra builds custom AI agents for medical clinics, real estate agencies and restaurants in Lebanon. Plans start at $59/month. The demo is at zyraagents.com/demo.`;
+
+function toggleZyraChat(){
+  zcwOpen=!zcwOpen;
+  document.getElementById('zyraChatWindow').classList.toggle('open',zcwOpen);
+  document.getElementById('zyraNotif').style.display=zcwOpen?'none':'block';
+  if(zcwOpen && zcwHistory.length===0) zcwGreet();
+}
+function zcwGreet(){
+  const msgs=document.getElementById('zcwMsgs');
+  const typing=document.getElementById('zcwTyping');
+  typing.classList.add('show');
+  setTimeout(()=>{
+    typing.classList.remove('show');
+    zcwAddMsg('a','👋 Hi! I\'m Zyra. I can help you understand how our AI agents work for your business. What type of business do you run?');
+  },1200);
+}
+function zcwAddMsg(role,text){
+  const msgs=document.getElementById('zcwMsgs');
+  const typing=document.getElementById('zcwTyping');
+  const d=document.createElement('div');
+  d.className='zcw-msg '+(role==='a'?'a':'u');
+  d.textContent=text;
+  d.style.opacity='0';d.style.transform='translateY(6px)';d.style.transition='all 0.3s';
+  msgs.insertBefore(d,typing);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{d.style.opacity='1';d.style.transform='none';}));
+  msgs.scrollTop=msgs.scrollHeight;
+}
+async function sendZyraMsg(){
+  if(zcwLoading)return;
+  const inp=document.getElementById('zcwInput');
+  const text=inp.value.trim();if(!text)return;
+  inp.value='';
+  zcwAddMsg('u',text);
+  zcwHistory.push({role:'user',content:text});
+  zcwLoading=true;
+  const typing=document.getElementById('zcwTyping');
+  const msgs=document.getElementById('zcwMsgs');
+  typing.classList.add('show');msgs.scrollTop=msgs.scrollHeight;
+  try{
+    const r=await fetch('https://zyra-agent-xi.vercel.app/api/chat',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:zcwHistory,system:ZCW_SYSTEM})
+    });
+    const d=await r.json();
+    typing.classList.remove('show');
+    const reply=d.reply||d.content?.[0]?.text||'Let me connect you with our team at hello@zyraagents.com';
+    zcwHistory.push({role:'assistant',content:reply});
+    zcwAddMsg('a',reply);
+  }catch{
+    typing.classList.remove('show');
+    zcwAddMsg('a','Something went wrong. Email us at hello@zyraagents.com and we will get back to you right away.');
+  }
+  zcwLoading=false;
+}
+</script>
 
 <!-- CONTACT FORM MODAL -->
 <div id="contactModal" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:20px;">
