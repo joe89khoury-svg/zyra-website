@@ -99,12 +99,12 @@ nav.sc{height:60px;background:rgba(8,8,8,0.96);}
 .hero-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
 
 /* Widget */
-.widget{background:rgba(8,8,8,0.84);border:1px solid var(--bdg);overflow:hidden;}
+.widget{background:rgba(8,8,8,0.84);border:1px solid var(--bdg);overflow:hidden;display:flex;flex-direction:column;}
 .w-live{margin:14px 16px 0;padding:4px 10px;background:rgba(0,229,195,0.1);border:1px solid rgba(0,229,195,0.25);font-family:'DM Mono',monospace;font-size:9px;color:var(--elec);letter-spacing:0.2em;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;}
 .w-bar{padding:12px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:7px;background:rgba(201,169,110,0.04);}
 .wdot{width:8px;height:8px;border-radius:50%;}
 .wtitle{font-family:'DM Mono',monospace;font-size:10px;color:var(--fog);letter-spacing:0.14em;margin-left:4px;}
-.w-msgs{padding:14px 16px;display:flex;flex-direction:column;gap:9px;min-height:210px;}
+.w-msgs{padding:14px 16px;display:flex;flex-direction:column;gap:9px;height:210px;overflow:hidden;}
 .wmsg{padding:9px 12px;font-size:12.5px;line-height:1.55;max-width:86%;opacity:0;transform:translateY(6px);transition:opacity 0.35s,transform 0.35s;}
 .wmsg.show{opacity:1;transform:none;}
 .wmsg.a{background:rgba(201,169,110,0.1);border:1px solid rgba(201,169,110,0.2);color:var(--cream);border-radius:0 8px 8px 8px;}
@@ -304,8 +304,8 @@ footer{background:var(--ink);border-top:1px solid var(--bd);padding:28px 5vw;dis
 
 <!-- HERO -->
 <section id="hero">
-  <!-- Beirut background image -->
-  <div style="position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1548013146-72479768bada?w=1920&q=85') center/cover no-repeat;z-index:0;"></div>
+  <!-- Beirut corniche waterfront -->
+  <div style="position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1580674684081-7617fbf3d745?w=1920&q=85') center/cover no-repeat;z-index:0;"></div>
   <!-- Dark gradient overlay -->
   <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(8,8,8,0.95) 0%,rgba(8,8,8,0.82) 50%,rgba(8,8,8,0.55) 100%);z-index:1;"></div>
   <!-- Ambient orbs on top of image -->
@@ -504,7 +504,7 @@ footer{background:var(--ink);border-top:1px solid var(--bd);padding:28px 5vw;dis
           <div class="pfeat"><svg width="13" height="13" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Lead qualification</div>
           <div class="pfeat"><svg width="13" height="13" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Monthly performance report</div>
         </div>
-        <a href="mailto:hello@zyraagents.com" class="pcta">Get Started</a>
+        <a onclick="openModal()" class="pcta" style="cursor:pointer;">Get Started</a>
       </div>
       <div class="plan pop">
         <div class="pbadge">Most Popular</div>
@@ -523,7 +523,7 @@ footer{background:var(--ink);border-top:1px solid var(--bd);padding:28px 5vw;dis
           <div class="pfeat"><svg width="13" height="13" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Priority support and monthly review</div>
           <div class="pfeat"><svg width="13" height="13" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>CRM integration</div>
         </div>
-        <a href="mailto:hello@zyraagents.com" class="pcta">Get Started</a>
+        <a onclick="openModal()" class="pcta" style="cursor:pointer;">Get Started</a>
       </div>
       <div class="plan">
         <div class="pname">Premium</div>
@@ -542,7 +542,7 @@ footer{background:var(--ink);border-top:1px solid var(--bd);padding:28px 5vw;dis
           <div class="pfeat"><svg width="13" height="13" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Custom agent retraining anytime</div>
           <div class="pfeat"><svg width="13" height="13" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Bi-weekly performance review</div>
         </div>
-        <a href="mailto:hello@zyraagents.com" class="pcta">Get Started</a>
+        <a onclick="openModal()" class="pcta" style="cursor:pointer;">Get Started</a>
       </div>
     </div>
     <div class="pr-note">All prices in USD. Annual plans available with significant savings.<br><strong>Not sure which plan?</strong> Email hello@zyraagents.com and we will recommend the right one.</div>
